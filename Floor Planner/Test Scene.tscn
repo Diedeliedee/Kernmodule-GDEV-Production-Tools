@@ -1,0 +1,103 @@
+[gd_scene load_steps=13 format=3 uid="uid://c8wdqw56e6xnb"]
+
+[ext_resource type="Script" path="res://Move System/ClickHandler.cs" id="1_004bv"]
+[ext_resource type="Script" path="res://Move System/Furniture.cs" id="1_e6klf"]
+[ext_resource type="Script" path="res://Move System/FurnitureMover.cs" id="2_odphy"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_shoe0"]
+height = 0.1
+radial_segments = 16
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fq4gh"]
+height = 0.1
+
+[sub_resource type="TorusMesh" id="TorusMesh_0jjg7"]
+inner_radius = 0.7
+outer_radius = 0.8
+rings = 32
+ring_segments = 16
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_r6331"]
+height = 0.05
+radius = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_kq0l5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_571g8"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_byv48"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_ydwdh"]
+sky_material = SubResource("ProceduralSkyMaterial_byv48")
+
+[sub_resource type="Environment" id="Environment_af3k7"]
+background_mode = 2
+sky = SubResource("Sky_ydwdh")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Systems" type="Node" parent="."]
+
+[node name="Camera Pivot" type="Node3D" parent="Systems"]
+transform = Transform3D(1, 0, 0, 0, 0.873109, 0.487524, 0, -0.487524, 0.873109, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Systems/Camera Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.838231, 0.524882, 9.17047)
+
+[node name="RayCast3D" type="RayCast3D" parent="Systems/Camera Pivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -2.98023e-08, -1, 0, 1, -2.98023e-08, 0, 0, 0)
+script = ExtResource("1_004bv")
+
+[node name="Furniture Mover" type="Node" parent="Systems" node_paths=PackedStringArray("m_clickHandler")]
+script = ExtResource("2_odphy")
+m_clickHandler = NodePath("../Camera Pivot/Camera3D/RayCast3D")
+
+[node name="Gizmo" type="Node3D" parent="Systems/Furniture Mover"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.416377, -2.38419e-07, 2.53356)
+
+[node name="Movement Gizmo" type="StaticBody3D" parent="Systems/Furniture Mover/Gizmo"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture Mover/Gizmo/Movement Gizmo"]
+mesh = SubResource("CylinderMesh_shoe0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture Mover/Gizmo/Movement Gizmo"]
+shape = SubResource("CylinderShape3D_fq4gh")
+
+[node name="Rotation Gizmo" type="StaticBody3D" parent="Systems/Furniture Mover/Gizmo"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture Mover/Gizmo/Rotation Gizmo"]
+mesh = SubResource("TorusMesh_0jjg7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture Mover/Gizmo/Rotation Gizmo"]
+shape = SubResource("CylinderShape3D_r6331")
+
+[node name="Room Root" type="CSGCombiner3D" parent="Systems"]
+
+[node name="Room" type="CSGBox3D" parent="Systems/Room Root"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.810303, 0.5, -1.11816)
+flip_faces = true
+size = Vector3(2.62061, 1, 3.23633)
+
+[node name="Furniture" type="StaticBody3D" parent="Systems/Room Root/Room"]
+transform = Transform3D(0.569053, 0, -0.803733, 0, 0.984788, 0, 0.803733, 0, 0.569053, 0.395324, -0.194523, 0.823098)
+script = ExtResource("1_e6klf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Room Root/Room/Furniture"]
+mesh = SubResource("BoxMesh_kq0l5")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Room Root/Room/Furniture"]
+shape = SubResource("BoxShape3D_571g8")
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_af3k7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
