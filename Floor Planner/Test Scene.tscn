@@ -1,37 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://c8wdqw56e6xnb"]
+[gd_scene load_steps=11 format=3 uid="uid://c8wdqw56e6xnb"]
 
-[ext_resource type="Script" path="res://Move System/ClickHandler.cs" id="1_004bv"]
-[ext_resource type="Script" path="res://Move System/Furniture.cs" id="1_e6klf"]
-[ext_resource type="Script" path="res://Move System/InputReader.cs" id="1_i5ofh"]
-[ext_resource type="Script" path="res://Move System/FurnitureManager.cs" id="2_nno8h"]
-[ext_resource type="Script" path="res://Move System/RaycastHandler.cs" id="2_spc5r"]
-[ext_resource type="Script" path="res://Move System/MovementGizmo.cs" id="3_ujxq6"]
-[ext_resource type="Script" path="res://Move System/GizmoHandler.cs" id="6_ves42"]
+[ext_resource type="Script" path="res://Scripts/Click System/ClickHandler.cs" id="1_004bv"]
+[ext_resource type="Script" path="res://Scripts/InputReader.cs" id="1_i5ofh"]
+[ext_resource type="Script" path="res://Scripts/FurnitureManager.cs" id="2_nno8h"]
+[ext_resource type="Script" path="res://Scripts/RaycastHandler.cs" id="2_spc5r"]
+[ext_resource type="PackedScene" uid="uid://sjcx8666rnn3" path="res://Objects/Furniture/PRE_Furniture.tscn" id="4_hyc1f"]
+[ext_resource type="PackedScene" uid="uid://buuuopbynd3y3" path="res://Objects/Movement Gizmo/PRE_Movement Gizmo.tscn" id="5_rc7rj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4nnpg"]
 size = Vector3(100, 1, 100)
-
-[sub_resource type="BoxMesh" id="BoxMesh_kq0l5"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_571g8"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_shoe0"]
-lightmap_size_hint = Vector2i(17, 9)
-height = 0.1
-radial_segments = 16
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_fq4gh"]
-height = 0.1
-
-[sub_resource type="TorusMesh" id="TorusMesh_0jjg7"]
-inner_radius = 0.7
-outer_radius = 0.8
-rings = 32
-ring_segments = 16
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_r6331"]
-height = 0.05
-radius = 0.8
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_byv48"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -54,17 +31,41 @@ glow_enabled = true
 script = ExtResource("1_i5ofh")
 floorRaycast = NodePath("../Camera Pivot/Visual Camera/Ground Raycast")
 
-[node name="Click Handler" type="Node" parent="Systems/Input" node_paths=PackedStringArray("gizmoRaycast", "furtnitureRaycast", "input")]
+[node name="Click Handler" type="Node" parent="Systems/Input"]
 script = ExtResource("1_004bv")
-gizmoRaycast = NodePath("../../Camera Pivot/Visual Camera/Gizmo Raycast")
-furtnitureRaycast = NodePath("../../Camera Pivot/Visual Camera/Furniture Raycast")
-input = NodePath("..")
+gizmoRaycast = Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -20),"collision_mask":4,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
+
+furtnitureRaycast = Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -20),"collision_mask":2,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
+
+input = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("1_i5ofh"),"floorRaycast":Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -100),"collision_mask":1,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
+)
+
 
 [node name="Floor Collider" type="StaticBody3D" parent="Systems/Input"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
 [node name="Shape" type="CollisionShape3D" parent="Systems/Input/Floor Collider"]
 shape = SubResource("BoxShape3D_4nnpg")
+
+[node name="Furniture" type="Node" parent="Systems"]
+script = ExtResource("2_nno8h")
+furnitureParent = Object(CSGCombiner3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"layers":1,"sorting_offset":0.0,"sorting_use_aabb_center":true,"material_override":null,"material_overlay":null,"transparency":0.0,"cast_shadow":1,"extra_cull_margin":0.0,"custom_aabb":AABB(0, 0, 0, 0, 0, 0),"lod_bias":1.0,"ignore_occlusion_culling":false,"gi_mode":1,"gi_lightmap_scale":0,"visibility_range_begin":0.0,"visibility_range_begin_margin":0.0,"visibility_range_end":0.0,"visibility_range_end_margin":0.0,"visibility_range_fade_mode":0,"operation":0,"snap":0.001,"calculate_tangents":true,"use_collision":false,"collision_layer":1,"collision_mask":1,"collision_priority":1.0,"script":null)
+
+gizmo = Object(Node3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.416377, -2.38419e-07, 2.53356),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"script":Resource("res://Objects/Movement Gizmo/GizmoHandler.cs"))
+
+
+[node name="Room Root" type="CSGCombiner3D" parent="Systems/Furniture"]
+
+[node name="Room" type="CSGBox3D" parent="Systems/Furniture/Room Root"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.810303, 0.5, -1.11816)
+flip_faces = true
+size = Vector3(2.62061, 1, 3.23633)
+
+[node name="Furniture" parent="Systems/Furniture/Room Root/Room" instance=ExtResource("4_hyc1f")]
+
+[node name="Furniture2" parent="Systems/Furniture/Room Root/Room" instance=ExtResource("4_hyc1f")]
+
+[node name="Gizmo" parent="Systems/Furniture" instance=ExtResource("5_rc7rj")]
 
 [node name="Camera Pivot" type="Node3D" parent="Systems"]
 transform = Transform3D(1, 0, 0, 0, 0.873109, 0.487524, 0, -0.487524, 0.873109, 0, 0, 0)
@@ -85,74 +86,6 @@ script = ExtResource("2_spc5r")
 target_position = Vector3(0, 0, -20)
 collision_mask = 4
 script = ExtResource("2_spc5r")
-
-[node name="Furniture" type="Node" parent="Systems" node_paths=PackedStringArray("furnitureParent", "gizmo")]
-script = ExtResource("2_nno8h")
-furnitureParent = NodePath("Room Root")
-gizmo = NodePath("Gizmo")
-
-[node name="Room Root" type="CSGCombiner3D" parent="Systems/Furniture"]
-
-[node name="Room" type="CSGBox3D" parent="Systems/Furniture/Room Root"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.810303, 0.5, -1.11816)
-flip_faces = true
-size = Vector3(2.62061, 1, 3.23633)
-
-[node name="Furniture" type="StaticBody3D" parent="Systems/Furniture/Room Root/Room"]
-transform = Transform3D(0.569053, 0, -0.803733, 0, 0.984788, 0, 0.803733, 0, 0.569053, 0.395324, -0.194523, 0.823098)
-collision_layer = 2
-collision_mask = 2
-script = ExtResource("1_e6klf")
-smoothenWeight = 0.1
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture/Room Root/Room/Furniture"]
-mesh = SubResource("BoxMesh_kq0l5")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture/Room Root/Room/Furniture"]
-shape = SubResource("BoxShape3D_571g8")
-
-[node name="Furniture2" type="StaticBody3D" parent="Systems/Furniture/Room Root/Room"]
-transform = Transform3D(0.569053, 0, -0.803733, 0, 0.984788, 0, 0.803733, 0, 0.569053, -0.897116, -0.194523, -0.0287411)
-collision_layer = 2
-collision_mask = 2
-script = ExtResource("1_e6klf")
-smoothenWeight = 0.1
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture/Room Root/Room/Furniture2"]
-mesh = SubResource("BoxMesh_kq0l5")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture/Room Root/Room/Furniture2"]
-shape = SubResource("BoxShape3D_571g8")
-
-[node name="Gizmo" type="Node3D" parent="Systems/Furniture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.416377, -2.38419e-07, 2.53356)
-script = ExtResource("6_ves42")
-
-[node name="Movement Gizmo" type="StaticBody3D" parent="Systems/Furniture/Gizmo" node_paths=PackedStringArray("input")]
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("3_ujxq6")
-input = NodePath("../../../Input")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture/Gizmo/Movement Gizmo"]
-layers = 2
-mesh = SubResource("CylinderMesh_shoe0")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture/Gizmo/Movement Gizmo"]
-shape = SubResource("CylinderShape3D_fq4gh")
-
-[node name="Rotation Gizmo" type="StaticBody3D" parent="Systems/Furniture/Gizmo"]
-collision_layer = 4
-collision_mask = 4
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Systems/Furniture/Gizmo/Rotation Gizmo"]
-layers = 2
-mesh = SubResource("TorusMesh_0jjg7")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Systems/Furniture/Gizmo/Rotation Gizmo"]
-shape = SubResource("CylinderShape3D_r6331")
 
 [node name="Environment" type="Node" parent="."]
 

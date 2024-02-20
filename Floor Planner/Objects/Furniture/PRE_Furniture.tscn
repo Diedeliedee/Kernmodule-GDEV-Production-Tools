@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://sjcx8666rnn3"]
+
+[ext_resource type="Script" path="res://Objects/Furniture/Furniture.cs" id="1_5fl6q"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_kq0l5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_571g8"]
+
+[node name="Furniture" type="StaticBody3D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_5fl6q")
+smoothenWeight = 0.1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_kq0l5")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_571g8")
