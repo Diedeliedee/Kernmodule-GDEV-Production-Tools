@@ -1,50 +1,38 @@
 ﻿using Godot;
-using System;
 
-public partial class ClickHandler : RayCast3D
+public partial class ClickHandler : Node
 {
-    [Export] private float m_castLength = 1000f;
-
-    //  Events:
-    public Action<IClickable> m_onClick;
-    public Action<IClickable> m_onRelease;
+    //  Reference:
+    [Export] public RaycastHandler gizmoRaycast;
+    [Export] public RaycastHandler furtnitureRaycast;
+    [Export] public InputReader input;
 
     //  Cache:
     private IClickable m_currentSelected = null;
 
-    //  Reference:
-    private Camera3D m_cam;
-
-    public override void _Ready()
-    {
-        m_cam = GetParent<Camera3D>();
-    }
-
     public override void _Process(double delta)
     {
+        if (input.leftClickPressed)
+        {
+            if (RegisterClick(gizmoRaycast)) return;
+            if (RegisterClick(furtnitureRaycast)) return;
+        }
+        if (input.leftClickReleased && m_currentSelected != null)
+        {
+            m_currentSelected.OnRelease();
+            m_currentSelected = null;
+            return;
+        }
         m_currentSelected?.WhileHold();
     }
 
-    public override void _Input(InputEvent @event)
+    private bool RegisterClick(RaycastHandler _raycaster)
     {
-        if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Left)
-        {
-            TargetPosition = ToLocal(m_cam.ProjectRayNormal(eventMouseButton.Position) * m_castLength);
-            ForceRaycastUpdate();
-            if (GetCollider() is not IClickable _clickable) return;
+        if (!_raycaster.Hit(out RaycastHandler.Result _result)) return false;
+        if (_result.collider is not IClickable _clickable) return false;
 
-            if (eventMouseButton.Pressed)
-            {
-                _clickable.OnClick();
-                m_currentSelected = _clickable;
-                m_onClick?.Invoke(_clickable);
-            }
-            if (!eventMouseButton.Pressed)
-            {
-                _clickable.OnRelease();
-                m_currentSelected = null;
-                m_onRelease?.Invoke(_clickable);
-            }
-        }
+        _clickable.OnClick();
+        m_currentSelected = _clickable;
+        return true;
     }
 }
