@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class MovementGizmo : StaticBody3D, IClickable
+public partial class RotationGizmo : StaticBody3D, IClickable
 {
     [Export] public InputReader input;
 
