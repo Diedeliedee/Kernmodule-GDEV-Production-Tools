@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/FurnitureManager.cs" id="2_nno8h"]
 [ext_resource type="Script" path="res://Scripts/RaycastHandler.cs" id="2_spc5r"]
 [ext_resource type="PackedScene" uid="uid://sjcx8666rnn3" path="res://Objects/Furniture/PRE_Furniture.tscn" id="4_hyc1f"]
-[ext_resource type="PackedScene" uid="uid://buuuopbynd3y3" path="res://Objects/Movement Gizmo/PRE_Movement Gizmo.tscn" id="5_rc7rj"]
+[ext_resource type="PackedScene" uid="uid://buuuopbynd3y3" path="res://Objects/Furniture Gizmo/PRE_Movement Gizmo.tscn" id="5_rc7rj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4nnpg"]
 size = Vector3(100, 1, 100)
@@ -31,15 +31,11 @@ glow_enabled = true
 script = ExtResource("1_i5ofh")
 floorRaycast = NodePath("../Camera Pivot/Visual Camera/Ground Raycast")
 
-[node name="Click Handler" type="Node" parent="Systems/Input"]
+[node name="Click Handler" type="Node" parent="Systems/Input" node_paths=PackedStringArray("gizmoRaycast", "furtnitureRaycast", "input")]
 script = ExtResource("1_004bv")
-gizmoRaycast = Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -20),"collision_mask":4,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
-
-furtnitureRaycast = Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -20),"collision_mask":2,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
-
-input = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("1_i5ofh"),"floorRaycast":Object(RayCast3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"enabled":true,"exclude_parent":true,"target_position":Vector3(0, 0, -100),"collision_mask":1,"hit_from_inside":false,"hit_back_faces":true,"collide_with_areas":false,"collide_with_bodies":true,"debug_shape_custom_color":Color(0, 0, 0, 1),"debug_shape_thickness":2,"script":ExtResource("2_spc5r"))
-)
-
+gizmoRaycast = NodePath("../../Camera Pivot/Visual Camera/Gizmo Raycast")
+furtnitureRaycast = NodePath("../../Camera Pivot/Visual Camera/Furniture Raycast")
+input = NodePath("..")
 
 [node name="Floor Collider" type="StaticBody3D" parent="Systems/Input"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -47,25 +43,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Systems/Input/Floor Collider"]
 shape = SubResource("BoxShape3D_4nnpg")
 
-[node name="Furniture" type="Node" parent="Systems"]
+[node name="Furniture System" type="Node" parent="Systems" node_paths=PackedStringArray("furnitureParent", "gizmo")]
 script = ExtResource("2_nno8h")
-furnitureParent = Object(CSGCombiner3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"layers":1,"sorting_offset":0.0,"sorting_use_aabb_center":true,"material_override":null,"material_overlay":null,"transparency":0.0,"cast_shadow":1,"extra_cull_margin":0.0,"custom_aabb":AABB(0, 0, 0, 0, 0, 0),"lod_bias":1.0,"ignore_occlusion_culling":false,"gi_mode":1,"gi_lightmap_scale":0,"visibility_range_begin":0.0,"visibility_range_begin_margin":0.0,"visibility_range_end":0.0,"visibility_range_end_margin":0.0,"visibility_range_fade_mode":0,"operation":0,"snap":0.001,"calculate_tangents":true,"use_collision":false,"collision_layer":1,"collision_mask":1,"collision_priority":1.0,"script":null)
+furnitureParent = NodePath("Room Root")
+gizmo = NodePath("Gizmo")
 
-gizmo = Object(Node3D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","transform":Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.416377, -2.38419e-07, 2.53356),"rotation_edit_mode":0,"rotation_order":2,"top_level":false,"visible":true,"visibility_parent":NodePath(""),"script":Resource("res://Objects/Movement Gizmo/GizmoHandler.cs"))
+[node name="Room Root" type="CSGCombiner3D" parent="Systems/Furniture System"]
 
-
-[node name="Room Root" type="CSGCombiner3D" parent="Systems/Furniture"]
-
-[node name="Room" type="CSGBox3D" parent="Systems/Furniture/Room Root"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.810303, 0.5, -1.11816)
+[node name="Room" type="CSGBox3D" parent="Systems/Furniture System/Room Root"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 flip_faces = true
-size = Vector3(2.62061, 1, 3.23633)
+size = Vector3(5, 2.5, 5)
 
-[node name="Furniture" parent="Systems/Furniture/Room Root/Room" instance=ExtResource("4_hyc1f")]
+[node name="Furniture" parent="Systems/Furniture System/Room Root" instance=ExtResource("4_hyc1f")]
+transform = Transform3D(0.662398, 0, 0.749152, 0, 1, 0, -0.749152, 0, 0.662398, 1.27152, 0, 1.00273)
 
-[node name="Furniture2" parent="Systems/Furniture/Room Root/Room" instance=ExtResource("4_hyc1f")]
+[node name="Furniture2" parent="Systems/Furniture System/Room Root" instance=ExtResource("4_hyc1f")]
+transform = Transform3D(0.915543, 0, -0.402219, 0, 1, 0, 0.402219, 0, 0.915543, -1.41094, 0, -1.1983)
 
-[node name="Gizmo" parent="Systems/Furniture" instance=ExtResource("5_rc7rj")]
+[node name="Gizmo" parent="Systems/Furniture System" node_paths=PackedStringArray("m_input") instance=ExtResource("5_rc7rj")]
+m_input = NodePath("../../Input")
 
 [node name="Camera Pivot" type="Node3D" parent="Systems"]
 transform = Transform3D(1, 0, 0, 0, 0.873109, 0.487524, 0, -0.487524, 0.873109, 0, 0, 0)

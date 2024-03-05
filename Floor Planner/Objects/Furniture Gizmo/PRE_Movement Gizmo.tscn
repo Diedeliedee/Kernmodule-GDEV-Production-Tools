@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://buuuopbynd3y3"]
+[gd_scene load_steps=8 format=3 uid="uid://buuuopbynd3y3"]
 
-[ext_resource type="Script" path="res://Objects/Movement Gizmo/GizmoHandler.cs" id="1_80yab"]
-[ext_resource type="Script" path="res://Objects/Movement Gizmo/MovementGizmo.cs" id="2_wiyoi"]
+[ext_resource type="Script" path="res://Objects/Furniture Gizmo/GizmoHandler.cs" id="1_80yab"]
+[ext_resource type="Script" path="res://Objects/Furniture Gizmo/MovementGizmo.cs" id="2_wiyoi"]
+[ext_resource type="Script" path="res://Objects/Furniture Gizmo/RotationGizmo.cs" id="3_4uxgq"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_shoe0"]
 lightmap_size_hint = Vector2i(17, 9)
@@ -28,7 +29,6 @@ script = ExtResource("1_80yab")
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("2_wiyoi")
-input = null
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Movement Gizmo"]
 layers = 2
@@ -40,6 +40,7 @@ shape = SubResource("CylinderShape3D_fq4gh")
 [node name="Rotation Gizmo" type="StaticBody3D" parent="."]
 collision_layer = 4
 collision_mask = 4
+script = ExtResource("3_4uxgq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Rotation Gizmo"]
 layers = 2

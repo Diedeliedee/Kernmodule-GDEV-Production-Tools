@@ -1,9 +1,11 @@
 using Godot;
-using System;
 
 public partial class GizmoHandler : Node3D
 {
+    [Export] private InputReader m_input;
+
 	private MovementGizmo m_movementGizmo = null;
+	private RotationGizmo m_rotationGizmo = null;
 
     public Vector2 position
     {
@@ -19,5 +21,9 @@ public partial class GizmoHandler : Node3D
     public override void _Ready()
     {
         m_movementGizmo = GetChild<MovementGizmo>(0);
+        m_rotationGizmo = GetChild<RotationGizmo>(1);
+
+        m_movementGizmo.Setup(m_input);
+        m_rotationGizmo.Setup(m_input);
     }
 }

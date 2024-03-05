@@ -20,7 +20,7 @@ namespace Joeri.Tools.Utilities
         /// </summary>
         public static Vector3 Cubular(this Vector2 _vector, float _height = 0f)
         {
-            return new Vector3(_vector.X, _height, _vector.Z);
+            return new Vector3(_vector.X, _height, _vector.Y);
         }
         #endregion
     }
