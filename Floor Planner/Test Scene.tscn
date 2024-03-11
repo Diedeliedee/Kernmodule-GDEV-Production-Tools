@@ -1,11 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8wdqw56e6xnb"]
+[gd_scene load_steps=13 format=3 uid="uid://c8wdqw56e6xnb"]
 
 [ext_resource type="Script" path="res://Scripts/Click System/ClickHandler.cs" id="1_004bv"]
-[ext_resource type="Script" path="res://Scripts/InputReader.cs" id="1_i5ofh"]
+[ext_resource type="Script" path="res://Scripts/Input/InputReader.cs" id="1_i5ofh"]
+[ext_resource type="Script" path="res://Scripts/Saving and Loading/LoadSystem.cs" id="2_c2div"]
 [ext_resource type="Script" path="res://Scripts/FurnitureManager.cs" id="2_nno8h"]
-[ext_resource type="Script" path="res://Scripts/RaycastHandler.cs" id="2_spc5r"]
+[ext_resource type="Script" path="res://Scripts/Input/RaycastHandler.cs" id="2_spc5r"]
 [ext_resource type="PackedScene" uid="uid://sjcx8666rnn3" path="res://Objects/Furniture/PRE_Furniture.tscn" id="4_hyc1f"]
 [ext_resource type="PackedScene" uid="uid://buuuopbynd3y3" path="res://Objects/Furniture Gizmo/PRE_Movement Gizmo.tscn" id="5_rc7rj"]
+[ext_resource type="Script" path="res://Scripts/Saving and Loading/SaveSystem.cs" id="7_m2o4e"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4nnpg"]
 size = Vector3(100, 1, 100)
@@ -27,20 +29,32 @@ glow_enabled = true
 
 [node name="Systems" type="Node" parent="."]
 
-[node name="Input" type="Node" parent="Systems" node_paths=PackedStringArray("floorRaycast")]
-script = ExtResource("1_i5ofh")
-floorRaycast = NodePath("../Camera Pivot/Visual Camera/Ground Raycast")
+[node name="Saving & Loading" type="Node" parent="Systems"]
 
-[node name="Click Handler" type="Node" parent="Systems/Input" node_paths=PackedStringArray("gizmoRaycast", "furtnitureRaycast", "input")]
+[node name="Save System" type="Node" parent="Systems/Saving & Loading" node_paths=PackedStringArray("m_fileDialog", "m_furnitureManager")]
+script = ExtResource("7_m2o4e")
+m_fileDialog = NodePath("../../Visual System/UI/FileDialog")
+m_furnitureManager = NodePath("../../Furniture System")
+
+[node name="Load System" type="Node" parent="Systems/Saving & Loading" node_paths=PackedStringArray("m_fileDialog", "m_furnitureManager")]
+script = ExtResource("2_c2div")
+m_fileDialog = NodePath("../../Visual System/UI/FileDialog")
+m_furnitureManager = NodePath("../../Furniture System")
+
+[node name="Input System" type="Node" parent="Systems" node_paths=PackedStringArray("floorRaycast")]
+script = ExtResource("1_i5ofh")
+floorRaycast = NodePath("../Visual System/Camera Pivot/Visual Camera/Ground Raycast")
+
+[node name="Click Handler" type="Node" parent="Systems/Input System" node_paths=PackedStringArray("gizmoRaycast", "furtnitureRaycast", "input")]
 script = ExtResource("1_004bv")
-gizmoRaycast = NodePath("../../Camera Pivot/Visual Camera/Gizmo Raycast")
-furtnitureRaycast = NodePath("../../Camera Pivot/Visual Camera/Furniture Raycast")
+gizmoRaycast = NodePath("../../Visual System/Camera Pivot/Visual Camera/Gizmo Raycast")
+furtnitureRaycast = NodePath("../../Visual System/Camera Pivot/Visual Camera/Furniture Raycast")
 input = NodePath("..")
 
-[node name="Floor Collider" type="StaticBody3D" parent="Systems/Input"]
+[node name="Floor Collider" type="StaticBody3D" parent="Systems/Input System"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
-[node name="Shape" type="CollisionShape3D" parent="Systems/Input/Floor Collider"]
+[node name="Shape" type="CollisionShape3D" parent="Systems/Input System/Floor Collider"]
 shape = SubResource("BoxShape3D_4nnpg")
 
 [node name="Furniture System" type="Node" parent="Systems" node_paths=PackedStringArray("furnitureParent", "gizmo")]
@@ -62,24 +76,47 @@ transform = Transform3D(0.662398, 0, 0.749152, 0, 1, 0, -0.749152, 0, 0.662398, 
 transform = Transform3D(0.915543, 0, -0.402219, 0, 1, 0, 0.402219, 0, 0.915543, -1.41094, 0, -1.1983)
 
 [node name="Gizmo" parent="Systems/Furniture System" node_paths=PackedStringArray("m_input") instance=ExtResource("5_rc7rj")]
-m_input = NodePath("../../Input")
+m_input = NodePath("../../Input System")
 
-[node name="Camera Pivot" type="Node3D" parent="Systems"]
+[node name="Visual System" type="Node" parent="Systems"]
+
+[node name="UI" type="Node" parent="Systems/Visual System"]
+
+[node name="Save Button" type="Button" parent="Systems/Visual System/UI"]
+offset_left = 943.0
+offset_top = 26.0
+offset_right = 1134.0
+offset_bottom = 101.0
+text = "Save Selected Furniture"
+
+[node name="Load Button" type="Button" parent="Systems/Visual System/UI"]
+offset_left = 942.0
+offset_top = 117.0
+offset_right = 1133.0
+offset_bottom = 192.0
+text = "Load Selected Furniture"
+
+[node name="FileDialog" type="FileDialog" parent="Systems/Visual System/UI"]
+position = Vector2i(0, 36)
+size = Vector2i(392, 159)
+visible = true
+
+[node name="Camera Pivot" type="Node3D" parent="Systems/Visual System"]
 transform = Transform3D(1, 0, 0, 0, 0.873109, 0.487524, 0, -0.487524, 0.873109, 0, 0, 0)
 
-[node name="Visual Camera" type="Camera3D" parent="Systems/Camera Pivot"]
+[node name="Visual Camera" type="Camera3D" parent="Systems/Visual System/Camera Pivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.838231, 0.524882, 9.17047)
 
-[node name="Ground Raycast" type="RayCast3D" parent="Systems/Camera Pivot/Visual Camera"]
+[node name="Ground Raycast" type="RayCast3D" parent="Systems/Visual System/Camera Pivot/Visual Camera"]
 target_position = Vector3(0, 0, -100)
 script = ExtResource("2_spc5r")
 
-[node name="Furniture Raycast" type="RayCast3D" parent="Systems/Camera Pivot/Visual Camera"]
+[node name="Furniture Raycast" type="RayCast3D" parent="Systems/Visual System/Camera Pivot/Visual Camera"]
 target_position = Vector3(0, 0, -20)
 collision_mask = 2
 script = ExtResource("2_spc5r")
 
-[node name="Gizmo Raycast" type="RayCast3D" parent="Systems/Camera Pivot/Visual Camera"]
+[node name="Gizmo Raycast" type="RayCast3D" parent="Systems/Visual System/Camera Pivot/Visual Camera"]
 target_position = Vector3(0, 0, -20)
 collision_mask = 4
 script = ExtResource("2_spc5r")
@@ -92,3 +129,6 @@ environment = SubResource("Environment_af3k7")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
+
+[connection signal="button_down" from="Systems/Visual System/UI/Save Button" to="Systems/Saving & Loading/Save System" method="OnSaveButtonPressed"]
+[connection signal="button_down" from="Systems/Visual System/UI/Load Button" to="Systems/Saving & Loading/Load System" method="OnLoadButtonPressed"]

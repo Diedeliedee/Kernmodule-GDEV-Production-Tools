@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FurnitureData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xPos>3.5528188</xPos>
+  <zPos>4.5079155</zPos>
+  <rotation>48.516983</rotation>
+  <width>0.99999994</width>
+  <depth>0.99999994</depth>
+  <height>1</height>
+</FurnitureData>

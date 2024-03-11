@@ -9,6 +9,8 @@ public partial class FurnitureManager : Node
     private List<Furniture> m_registeredFurnitures = new();
     private Furniture m_holdingFurniture = null;
 
+    public Furniture selectedFurniture => m_holdingFurniture;
+
     public override void _Ready()
     {
         //  Register all furnitures already in the furniture parent.
