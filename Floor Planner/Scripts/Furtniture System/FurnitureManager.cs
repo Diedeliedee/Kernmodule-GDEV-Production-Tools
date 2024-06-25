@@ -1,15 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class FurnitureManager : Node
+public partial class FurnitureManager : Node, ISavable<LayoutData>
 {
     [Export] public Node furnitureParent;
-    [Export] public GizmoHandler gizmo;
+    [Export] public FurnitureMovementSystem movementSystem;
 
     private List<Furniture> m_registeredFurnitures = new();
-    private Furniture m_holdingFurniture = null;
-
-    public Furniture selectedFurniture => m_holdingFurniture;
+    public Furniture selectedFurniture => movementSystem.selectedFurniture;
 
     public override void _Ready()
     {
@@ -17,14 +15,6 @@ public partial class FurnitureManager : Node
         foreach (var _child in GetFurnitureFromNode(furnitureParent))
         {
             if (_child is Furniture _furniture) Register(_furniture);
-        }
-    }
-
-    public override void _Process(double delta)
-    {
-        if (m_holdingFurniture != null)
-        {
-            m_holdingFurniture.IterateTo(gizmo.GlobalPosition, (float)delta);
         }
     }
 
@@ -42,11 +32,7 @@ public partial class FurnitureManager : Node
     /// </summary>
     private void OnFurnitureSelect(Furniture _furniture)
     {
-        if (_furniture.GetHashCode() == m_holdingFurniture?.GetHashCode()) return;
-
-        GD.Print($"Current selected object: {_furniture.Name}");
-        gizmo.position = new Vector2(_furniture.GlobalPosition.X, _furniture.GlobalPosition.Z);
-        m_holdingFurniture = _furniture;
+        movementSystem.OnFurnitureSelect(_furniture);
     }
 
     /// <returns>All furniture classes from a tree of nodes.</returns>
@@ -65,5 +51,15 @@ public partial class FurnitureManager : Node
                 CheckChildren(_child);
             }
         }
+    }
+
+    public LayoutData SaveTo()
+    {
+        
+    }
+
+    public void LoadFrom(LayoutData _data)
+    {
+        throw new System.NotImplementedException();
     }
 }

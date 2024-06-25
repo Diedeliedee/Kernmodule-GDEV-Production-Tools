@@ -1,4 +1,4 @@
-﻿public class FurnitureData
+﻿public class RoomData
 {
     public float xPos       = 0f;
     public float zPos       = 0f;

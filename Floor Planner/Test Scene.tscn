@@ -1,13 +1,15 @@
-[gd_scene load_steps=13 format=3 uid="uid://c8wdqw56e6xnb"]
+[gd_scene load_steps=15 format=3 uid="uid://c8wdqw56e6xnb"]
 
 [ext_resource type="Script" path="res://Scripts/Click System/ClickHandler.cs" id="1_004bv"]
+[ext_resource type="Script" path="res://Scripts/Saving and Loading/ProgressManager.cs" id="1_7yycy"]
 [ext_resource type="Script" path="res://Scripts/Input/InputReader.cs" id="1_i5ofh"]
-[ext_resource type="Script" path="res://Scripts/Saving and Loading/LoadSystem.cs" id="2_c2div"]
-[ext_resource type="Script" path="res://Scripts/FurnitureManager.cs" id="2_nno8h"]
+[ext_resource type="Script" path="res://Scripts/Saving and Loading/SaveLoadSystem.cs" id="2_er1w4"]
+[ext_resource type="Script" path="res://Scripts/Furtniture System/FurnitureManager.cs" id="2_nno8h"]
 [ext_resource type="Script" path="res://Scripts/Input/RaycastHandler.cs" id="2_spc5r"]
 [ext_resource type="PackedScene" uid="uid://sjcx8666rnn3" path="res://Objects/Furniture/PRE_Furniture.tscn" id="4_hyc1f"]
 [ext_resource type="PackedScene" uid="uid://buuuopbynd3y3" path="res://Objects/Furniture Gizmo/PRE_Movement Gizmo.tscn" id="5_rc7rj"]
-[ext_resource type="Script" path="res://Scripts/Saving and Loading/SaveSystem.cs" id="7_m2o4e"]
+[ext_resource type="Script" path="res://Scripts/Furtniture System/FurnitureMovementSystem.cs" id="7_gdm8k"]
+[ext_resource type="Script" path="res://Scripts/UI/enable_dialog.gd" id="9_u54g7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4nnpg"]
 size = Vector3(100, 1, 100)
@@ -29,17 +31,15 @@ glow_enabled = true
 
 [node name="Systems" type="Node" parent="."]
 
-[node name="Saving & Loading" type="Node" parent="Systems"]
+[node name="Instantiation System" type="Node" parent="Systems"]
 
-[node name="Save System" type="Node" parent="Systems/Saving & Loading" node_paths=PackedStringArray("m_fileDialog", "m_furnitureManager")]
-script = ExtResource("7_m2o4e")
-m_fileDialog = NodePath("../../Visual System/UI/FileDialog")
-m_furnitureManager = NodePath("../../Furniture System")
+[node name="Progress System" type="Node" parent="Systems" node_paths=PackedStringArray("m_furnitureManager", "m_saveLoadSystem")]
+script = ExtResource("1_7yycy")
+m_furnitureManager = NodePath("../Furniture System")
+m_saveLoadSystem = NodePath("Saving & Loading")
 
-[node name="Load System" type="Node" parent="Systems/Saving & Loading" node_paths=PackedStringArray("m_fileDialog", "m_furnitureManager")]
-script = ExtResource("2_c2div")
-m_fileDialog = NodePath("../../Visual System/UI/FileDialog")
-m_furnitureManager = NodePath("../../Furniture System")
+[node name="Saving & Loading" type="Node" parent="Systems/Progress System"]
+script = ExtResource("2_er1w4")
 
 [node name="Input System" type="Node" parent="Systems" node_paths=PackedStringArray("floorRaycast")]
 script = ExtResource("1_i5ofh")
@@ -57,10 +57,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 [node name="Shape" type="CollisionShape3D" parent="Systems/Input System/Floor Collider"]
 shape = SubResource("BoxShape3D_4nnpg")
 
-[node name="Furniture System" type="Node" parent="Systems" node_paths=PackedStringArray("furnitureParent", "gizmo")]
+[node name="Furniture System" type="Node" parent="Systems" node_paths=PackedStringArray("furnitureParent", "movementSystem")]
 script = ExtResource("2_nno8h")
 furnitureParent = NodePath("Room Root")
-gizmo = NodePath("Gizmo")
+movementSystem = NodePath("Movement System")
 
 [node name="Room Root" type="CSGCombiner3D" parent="Systems/Furniture System"]
 
@@ -75,31 +75,112 @@ transform = Transform3D(0.662398, 0, 0.749152, 0, 1, 0, -0.749152, 0, 0.662398, 
 [node name="Furniture2" parent="Systems/Furniture System/Room Root" instance=ExtResource("4_hyc1f")]
 transform = Transform3D(0.915543, 0, -0.402219, 0, 1, 0, 0.402219, 0, 0.915543, -1.41094, 0, -1.1983)
 
-[node name="Gizmo" parent="Systems/Furniture System" node_paths=PackedStringArray("m_input") instance=ExtResource("5_rc7rj")]
-m_input = NodePath("../../Input System")
+[node name="Movement System" type="Node" parent="Systems/Furniture System" node_paths=PackedStringArray("gizmo")]
+script = ExtResource("7_gdm8k")
+gizmo = NodePath("Gizmo")
+
+[node name="Gizmo" parent="Systems/Furniture System/Movement System" node_paths=PackedStringArray("m_input") instance=ExtResource("5_rc7rj")]
+m_input = NodePath("../../../Input System")
 
 [node name="Visual System" type="Node" parent="Systems"]
 
 [node name="UI" type="Node" parent="Systems/Visual System"]
 
-[node name="Save Button" type="Button" parent="Systems/Visual System/UI"]
-offset_left = 943.0
-offset_top = 26.0
-offset_right = 1134.0
-offset_bottom = 101.0
-text = "Save Selected Furniture"
+[node name="Options Panel" type="Panel" parent="Systems/Visual System/UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+size_flags_stretch_ratio = 1.96
 
-[node name="Load Button" type="Button" parent="Systems/Visual System/UI"]
-offset_left = 942.0
-offset_top = 117.0
-offset_right = 1133.0
-offset_bottom = 192.0
-text = "Load Selected Furniture"
+[node name="HBoxContainer" type="HBoxContainer" parent="Systems/Visual System/UI/Options Panel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="FileDialog" type="FileDialog" parent="Systems/Visual System/UI"]
-position = Vector2i(0, 36)
+[node name="Save Button" type="Button" parent="Systems/Visual System/UI/Options Panel/HBoxContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="Load Button" type="Button" parent="Systems/Visual System/UI/Options Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Load
+"
+
+[node name="Create Button" type="Button" parent="Systems/Visual System/UI/Options Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Create"
+
+[node name="Export Button" type="Button" parent="Systems/Visual System/UI/Options Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Export"
+
+[node name="Save Dialog" type="FileDialog" parent="Systems/Visual System/UI"]
+title = "Save Layout"
+initial_position = 1
 size = Vector2i(392, 159)
-visible = true
+ok_button_text = "Save"
+filters = PackedStringArray(".txt")
+script = ExtResource("9_u54g7")
+
+[node name="Load Dialog" type="FileDialog" parent="Systems/Visual System/UI"]
+title = "Load Layout"
+initial_position = 1
+size = Vector2i(392, 159)
+ok_button_text = "Load"
+file_mode = 0
+filters = PackedStringArray(".txt")
+script = ExtResource("9_u54g7")
+
+[node name="Creation Dialog" type="ConfirmationDialog" parent="Systems/Visual System/UI"]
+title = "Create new Object.."
+initial_position = 1
+size = Vector2i(200, 158)
+script = ExtResource("9_u54g7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Systems/Visual System/UI/Creation Dialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 109.0
+
+[node name="Width" type="SpinBox" parent="Systems/Visual System/UI/Creation Dialog/VBoxContainer"]
+layout_mode = 2
+
+[node name="Height" type="SpinBox" parent="Systems/Visual System/UI/Creation Dialog/VBoxContainer"]
+layout_mode = 2
+
+[node name="Depth" type="SpinBox" parent="Systems/Visual System/UI/Creation Dialog/VBoxContainer"]
+layout_mode = 2
+
+[node name="Hierarchy" type="Panel" parent="Systems/Visual System/UI"]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -250.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Systems/Visual System/UI/Hierarchy"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Systems/Visual System/UI/Hierarchy/VBoxContainer"]
+layout_mode = 2
 
 [node name="Camera Pivot" type="Node3D" parent="Systems/Visual System"]
 transform = Transform3D(1, 0, 0, 0, 0.873109, 0.487524, 0, -0.487524, 0.873109, 0, 0, 0)
@@ -130,5 +211,7 @@ environment = SubResource("Environment_af3k7")
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[connection signal="button_down" from="Systems/Visual System/UI/Save Button" to="Systems/Saving & Loading/Save System" method="OnSaveButtonPressed"]
-[connection signal="button_down" from="Systems/Visual System/UI/Load Button" to="Systems/Saving & Loading/Load System" method="OnLoadButtonPressed"]
+[connection signal="pressed" from="Systems/Visual System/UI/Options Panel/HBoxContainer/Save Button" to="Systems/Visual System/UI/Save Dialog" method="_on_button_pressed"]
+[connection signal="pressed" from="Systems/Visual System/UI/Options Panel/HBoxContainer/Load Button" to="Systems/Visual System/UI/Load Dialog" method="_on_button_pressed"]
+[connection signal="confirmed" from="Systems/Visual System/UI/Save Dialog" to="Systems/Progress System" method="OnSaveConfirmed"]
+[connection signal="confirmed" from="Systems/Visual System/UI/Load Dialog" to="Systems/Progress System" method="OnLoadConfirmed"]
