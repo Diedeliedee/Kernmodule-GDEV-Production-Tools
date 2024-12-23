@@ -11,6 +11,9 @@ namespace BodyPartSwap
             var createdModelObject = Instantiate(_prefab, transform, false);
 
             Destroy(m_modelObject);
+
+            m_modelObject       = createdModelObject;
+            m_modelObject.name  = _prefab.name;
         }
     }
 }

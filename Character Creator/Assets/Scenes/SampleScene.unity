@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &15637085 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8902444068750089043, guid: b5f5f7e921711274e9bb1335e6164e33,
+    type: 3}
+  m_PrefabInstance: {fileID: 2363712771181081107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fbf2827a6d271046b1885a325ebca96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &243721921
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -280,7 +292,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1987805856}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99683696
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -513,6 +525,21 @@ MonoBehaviour:
   m_optionContentRoot: {fileID: 693668046}
   m_optionPrefab: {fileID: 7720319263743919443, guid: cad962f3cb4dd8745a23618bc6c6794b,
     type: 3}
+  m_onSwitchCalled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 15637085}
+        m_TargetAssemblyTypeName: BodyPartSwap.SwapHandler, Assembly-CSharp
+        m_MethodName: OnSwitchCommandReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &391176170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1238,7 +1265,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00001659008}
+  m_AnchoredPosition: {x: 0, y: 0.0003209229}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &693668047
