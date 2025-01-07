@@ -16,12 +16,12 @@ public class OptionHandler : MonoBehaviour
     //  Events:
     private OptionFrontman.QueueRequest m_queueRequest = null;
 
-    public void Setup(OptionFrontman.QueueRequest _queueRequest)
+    public void Setup(OptionFrontman.QueueRequest _queueRequest, int _index)
     {
         m_queueRequest = _queueRequest;
 
         //  Call the switch call-back, so that the model gets updated with the correct first option at the start of the scene.
-        SendAndProcessSwapRequest(m_index);
+        SendAndProcessSwapRequest(_index);
     }
 
     public void PullNext()

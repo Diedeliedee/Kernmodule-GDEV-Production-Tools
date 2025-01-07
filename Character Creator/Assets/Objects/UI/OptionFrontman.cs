@@ -9,8 +9,11 @@ public class OptionFrontman : MonoBehaviour
     //  Cache:
     private OptionHandler[] m_options = null;
 
-    public void Setup(QueueRequest _request)
+    public void Setup(QueueRequest _request, CharacterSetupMemory _save)
     {
+        //  If the save is null, just create a new one, and base it on that.
+        _save ??= new();
+
         //  Subscribe to the request broadcast. Whichever class is responsible for setting up this one, will receive the request.
         m_requestBroadcast += _request;
 
@@ -20,7 +23,7 @@ public class OptionFrontman : MonoBehaviour
         //  Run the setup of all the option handlers.
         for (int i = 0; i < m_options.Length; i++)
         {
-            m_options[i].Setup(OnSwitchCalled);
+            m_options[i].Setup(OnSwitchCalled, _save.indexes[i]);
         }
     }
     

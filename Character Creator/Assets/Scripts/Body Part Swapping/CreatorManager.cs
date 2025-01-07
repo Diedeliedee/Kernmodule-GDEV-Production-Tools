@@ -11,11 +11,16 @@ namespace BodyPartSwap
 
         private OptionFrontman m_options = null;
 
-        private void Awake()
+        /// <summary>
+        /// Called when the tool enters the creator scene for the first time.
+        /// </summary>
+        public void Begin()
         {
-            m_options = FindObjectOfType<OptionFrontman>();
+            //  Find the option front man.
+            m_options = GetComponentInChildren<OptionFrontman>();
 
-            m_options.Setup(OnSwitchCommandReceived);
+            //  Setup the options frontman.
+            m_options.Setup(OnSwitchCommandReceived, Blackboard.loadedSave);
         }
 
         /// <summary>
