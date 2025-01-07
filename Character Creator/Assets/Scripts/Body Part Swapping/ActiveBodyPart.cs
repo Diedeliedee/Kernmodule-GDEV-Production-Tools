@@ -2,18 +2,30 @@ using UnityEngine;
 
 namespace BodyPartSwap
 {
-    public class ActiveBodyPart : MonoBehaviour
+    public partial class ActiveBodyPart : MonoBehaviour
     {
+        [Header("Reference:")]
+        [SerializeField] private OptionQueue m_queue;
         [SerializeField] private GameObject m_modelObject;
 
-        public void SwapWith(GameObject _prefab)
+        public SwapCallbackResponse ProcessSwap(int _index)
         {
-            var createdModelObject = Instantiate(_prefab, transform, false);
+            var trueIndex = _index  % m_queue.queueLength;
+            var pulled              = m_queue.GetFromQueue(trueIndex);
+            var createdModelObject  = Instantiate(pulled.prefab, transform, false);
 
             Destroy(m_modelObject);
 
             m_modelObject       = createdModelObject;
-            m_modelObject.name  = _prefab.name;
+            m_modelObject.name  = pulled.prefab.name;
+
+            var callBack = new SwapCallbackResponse
+            {
+                responseIndex   = trueIndex,
+                part            = pulled,
+            };
+
+            return callBack;
         }
     }
 }

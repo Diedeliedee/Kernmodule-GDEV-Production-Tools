@@ -2,32 +2,41 @@ using UnityEngine;
 
 namespace BodyPartSwap
 {
-    public class SwapHandler : MonoBehaviour
+    public class CreatorManager : MonoBehaviour
     {
         [Header("Scene References:")]
         [SerializeField] private ActiveBodyPart m_head;
         [SerializeField] private ActiveBodyPart m_torso;
         [SerializeField] private ActiveBodyPart m_legs;
 
+        private OptionFrontman m_options = null;
+
+        private void Awake()
+        {
+            m_options = FindObjectOfType<OptionFrontman>();
+
+            m_options.Setup(OnSwitchCommandReceived);
+        }
+
         /// <summary>
         /// Called whenever the OptionManager broadcasts that one of it's option buttons has requested a body part swap.
         /// </summary>
-        public void OnSwitchCommandReceived(GlobalInfo.Types _type, BodyPartInfo _part)
+        public SwapCallbackResponse OnSwitchCommandReceived(Options _type, int _index)
         {
-            GetFromType(_type).SwapWith(_part.prefab);
+            return GetFromType(_type).ProcessSwap(_index);
         }
 
         /// <summary>
         /// Converts a body part type enum to an active body part reference.
         /// </summary>
-        private ActiveBodyPart GetFromType(GlobalInfo.Types _type)
+        private ActiveBodyPart GetFromType(Options _type)
         {
             return _type switch
             {
-                GlobalInfo.Types.Head   => m_head,
-                GlobalInfo.Types.Torso  => m_torso,
-                GlobalInfo.Types.Legs   => m_legs,
-                _                       => null,
+                Options.Head    => m_head,
+                Options.Torso   => m_torso,
+                Options.Legs    => m_legs,
+                _               => null,
             };
         }
     }

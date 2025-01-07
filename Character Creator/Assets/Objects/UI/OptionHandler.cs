@@ -4,39 +4,44 @@ using TMPro;
 
 public class OptionHandler : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI m_optionHeader;
+    [Header("Properties:")]
+    [SerializeField] private Options m_type = default;
+
+    [Header("Reference:")]
     [SerializeField] private TextMeshProUGUI m_activeSelection;
 
-    private PartQueue m_queue = null;
-    private System.Action<GlobalInfo.Types, BodyPartInfo> m_onSwitchTo = null;
+    //  Run-time:
+    private int m_index = 0;
 
-    public GlobalInfo.Types type => m_queue.type;
+    //  Events:
+    private OptionFrontman.QueueRequest m_queueRequest = null;
 
-    public void Setup(PartQueue _queue, System.Action<GlobalInfo.Types, BodyPartInfo> _switchCallback)
+    public void Setup(OptionFrontman.QueueRequest _queueRequest)
     {
-        m_queue         = _queue;
-        m_onSwitchTo    = _switchCallback;
-
-        m_optionHeader.text     = _queue.type.ToString();
-        m_activeSelection.text  = _queue.active.name;
+        m_queueRequest = _queueRequest;
 
         //  Call the switch call-back, so that the model gets updated with the correct first option at the start of the scene.
-        _switchCallback.Invoke(_queue.type, _queue.active);
+        SendAndProcessSwapRequest(m_index);
     }
 
     public void PullNext()
     {
-        var pulled = m_queue.PullNext();
-
-        m_onSwitchTo.Invoke(type, pulled);
-        m_activeSelection.text = pulled.name;
+        SendAndProcessSwapRequest(++m_index);
     }
 
     public void PullPrevious()
     {
-        var pulled = m_queue.PullPrevious();
+        SendAndProcessSwapRequest(--m_index);
+    }
 
-        m_onSwitchTo.Invoke(type, pulled);
-        m_activeSelection.text = pulled.name;
+    /// <summary>
+    /// Send a swap request to the frontman of the options menu, and receives a response from wherever it got it from to process.
+    /// </summary>
+    private void SendAndProcessSwapRequest(int _index)
+    {
+        var response = m_queueRequest.Invoke(m_type, _index);
+
+        m_activeSelection.text  = response.part.name;
+        m_index                 = response.responseIndex;
     }
 }

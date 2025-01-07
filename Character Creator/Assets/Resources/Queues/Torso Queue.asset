@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85b39145734903b43b30b3235711f524, type: 3}
-  m_Name: Square Head
+  m_Script: {fileID: 11500000, guid: 67961aff08ea5b546b77e08e2c59dbbd, type: 3}
+  m_Name: Torso Queue
   m_EditorClassIdentifier: 
-  m_type: 0
-  m_prefab: {fileID: 4438689380340900158, guid: 760406477380ce94a9247be0369e3135,
-    type: 3}
+  m_parts:
+  - {fileID: 11400000, guid: 33b086bf9e098bc408333d20fe98eebf, type: 2}
+  - {fileID: 11400000, guid: f21b2f37509ac6f49b04f9d75a9d5c06, type: 2}

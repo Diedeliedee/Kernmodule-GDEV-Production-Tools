@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85b39145734903b43b30b3235711f524, type: 3}
-  m_Name: Square Head
+  m_Name: Square Legs
   m_EditorClassIdentifier: 
-  m_type: 0
-  m_prefab: {fileID: 4438689380340900158, guid: 760406477380ce94a9247be0369e3135,
+  m_type: 2
+  m_prefab: {fileID: 2818746030877939347, guid: f12bb4afad1b1d64b9a25dbe1595af14,
     type: 3}

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68470b337f4a72a49a72880595b59eb1, type: 3}
-  m_Name: Sphere Pants
+  m_Script: {fileID: 11500000, guid: 67961aff08ea5b546b77e08e2c59dbbd, type: 3}
+  m_Name: Head Queue
   m_EditorClassIdentifier: 
-  m_type: 2
-  m_prefab: {fileID: 2818746030877939347, guid: 70592f54f7d570e4bb9ccf3c2d6149b8,
-    type: 3}
+  m_parts:
+  - {fileID: 11400000, guid: d971c0464c41656418e1aec321bdea00, type: 2}
+  - {fileID: 11400000, guid: 70ab264c40eba384fbaa362aa2cd8009, type: 2}

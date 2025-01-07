@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 107160748720775486}
   m_Layer: 0
-  m_Name: Sphere Pants
+  m_Name: Sphere Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

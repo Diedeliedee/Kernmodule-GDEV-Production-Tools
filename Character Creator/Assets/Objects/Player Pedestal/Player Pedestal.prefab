@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463c665d9d60b684588be4fdebe8f26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_queue: {fileID: 11400000, guid: 9e328b80c99ffe44980dc46e78bee2e7, type: 2}
   m_modelObject: {fileID: 5634598326135095025}
 --- !u!1 &5079681553613168331
 GameObject:
@@ -187,7 +188,7 @@ GameObject:
   - component: {fileID: 6925449647900060006}
   - component: {fileID: 8137287864313718968}
   m_Layer: 0
-  m_Name: Pants Root
+  m_Name: Legs Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,6 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463c665d9d60b684588be4fdebe8f26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_queue: {fileID: 11400000, guid: 1fb368232c2539640a17255b690eb226, type: 2}
   m_modelObject: {fileID: 5636365345393782533}
 --- !u!1 &5536689750951943273
 GameObject:
@@ -267,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463c665d9d60b684588be4fdebe8f26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_queue: {fileID: 11400000, guid: 7196648eaeb13174cae7d266b5c81ded, type: 2}
   m_modelObject: {fileID: 5898509959231205862}
 --- !u!1 &7708155378835316715
 GameObject:
@@ -277,7 +280,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7808722647887609856}
-  - component: {fileID: 8902444068750089043}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -303,21 +305,6 @@ Transform:
   - {fileID: 6925449647900060006}
   m_Father: {fileID: 1877454970061925345}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8902444068750089043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7708155378835316715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fbf2827a6d271046b1885a325ebca96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_head: {fileID: 7152688706914148422}
-  m_torso: {fileID: 7919969547798784490}
-  m_legs: {fileID: 8137287864313718968}
 --- !u!1001 &4432786986022354920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -459,7 +446,7 @@ PrefabInstance:
     - target: {fileID: 2818746030877939347, guid: f12bb4afad1b1d64b9a25dbe1595af14,
         type: 3}
       propertyPath: m_Name
-      value: Square Pants
+      value: Square Legs
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
