@@ -2,15 +2,17 @@ using UnityEngine;
 
 namespace BodyPartSwap
 {
-    [CreateAssetMenu(fileName = "New Queue", menuName = "Part Swapping/Queue", order = 2)]
+    [CreateAssetMenu(fileName = "New Queue", menuName = "Part Swapping/Queue", order = 1)]
 
     public class OptionQueue : ScriptableObject
     {
-        [SerializeField] private PartInfo[] m_parts;
+        [SerializeField] private Options m_type;
+        [SerializeField] private GameObject[] m_parts;
 
-        public int queueLength => m_parts.Length;
+        public Options type     => m_type;
+        public int queueLength  => m_parts.Length;
 
-        public PartInfo GetFromQueue(int _index)
+        public GameObject GetFromQueue(int _index)
         {
             if (_index < 0)
             {

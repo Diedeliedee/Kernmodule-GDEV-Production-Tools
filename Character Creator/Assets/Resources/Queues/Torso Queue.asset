@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67961aff08ea5b546b77e08e2c59dbbd, type: 3}
   m_Name: Torso Queue
   m_EditorClassIdentifier: 
+  m_type: 1
   m_parts:
-  - {fileID: 11400000, guid: 33b086bf9e098bc408333d20fe98eebf, type: 2}
-  - {fileID: 11400000, guid: f21b2f37509ac6f49b04f9d75a9d5c06, type: 2}
+  - {fileID: 7809201936472886798, guid: 473c2fac93e9b0c479f70f64fc8796fe, type: 3}
+  - {fileID: 4438689380340900158, guid: db07e5f33b385564591cea927e5bce27, type: 3}

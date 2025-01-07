@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67961aff08ea5b546b77e08e2c59dbbd, type: 3}
   m_Name: Legs Queue
   m_EditorClassIdentifier: 
+  m_type: 2
   m_parts:
-  - {fileID: 11400000, guid: 8da86c2750494b64ea6e8239f21ebe06, type: 2}
-  - {fileID: 11400000, guid: 4fd5c115a5837ee4784b0f01c7478932, type: 2}
+  - {fileID: 2818746030877939347, guid: f12bb4afad1b1d64b9a25dbe1595af14, type: 3}
+  - {fileID: 2818746030877939347, guid: 70592f54f7d570e4bb9ccf3c2d6149b8, type: 3}

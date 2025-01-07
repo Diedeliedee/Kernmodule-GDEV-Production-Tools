@@ -15,8 +15,8 @@ public class SetupManager : MonoBehaviour
     {
         var extenstions = new ExtensionFilter[]
         {
-            new("Json Files", "json", "JSON"),
-            new("T Files", "json", "JSON"),
+            new("Json Files", "json"),
+            new("Text Files", "txt"),
         };
 
         var paths = StandaloneFileBrowser.OpenFilePanel("Open Saved Character", Application.persistentDataPath, extenstions, false);

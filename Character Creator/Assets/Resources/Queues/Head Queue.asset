@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67961aff08ea5b546b77e08e2c59dbbd, type: 3}
   m_Name: Head Queue
   m_EditorClassIdentifier: 
+  m_type: 0
   m_parts:
-  - {fileID: 11400000, guid: d971c0464c41656418e1aec321bdea00, type: 2}
-  - {fileID: 11400000, guid: 70ab264c40eba384fbaa362aa2cd8009, type: 2}
+  - {fileID: 4438689380340900158, guid: 760406477380ce94a9247be0369e3135, type: 3}
+  - {fileID: 4438689380340900158, guid: f7f8e1eefabb1284ab5d6cf56dfd08fa, type: 3}

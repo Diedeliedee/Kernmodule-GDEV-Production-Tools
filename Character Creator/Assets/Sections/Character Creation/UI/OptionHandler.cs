@@ -4,44 +4,43 @@ using TMPro;
 
 public class OptionHandler : MonoBehaviour
 {
-    [Header("Properties:")]
-    [SerializeField] private Options m_type = default;
-
     [Header("Reference:")]
+    [SerializeField] private TextMeshProUGUI m_header;
     [SerializeField] private TextMeshProUGUI m_activeSelection;
 
-    //  Run-time:
-    private int m_index = 0;
+    //  Cache:
+    private ActiveBodyPart m_linkedPart;
 
-    //  Events:
-    private OptionFrontman.QueueRequest m_queueRequest = null;
-
-    public void Setup(OptionFrontman.QueueRequest _queueRequest, int _index)
+    public void Setup(ActiveBodyPart _linkedPart)
     {
-        m_queueRequest = _queueRequest;
+        m_linkedPart    = _linkedPart;
+        m_header.text   = _linkedPart.type.ToString();
 
-        //  Call the switch call-back, so that the model gets updated with the correct first option at the start of the scene.
-        SendAndProcessSwapRequest(_index);
+        _linkedPart.SubscribeToCallback(OnAttachedPartUpdated);
     }
 
     public void PullNext()
     {
-        SendAndProcessSwapRequest(++m_index);
+        SendAndProcessSwapRequest(1);
     }
 
     public void PullPrevious()
     {
-        SendAndProcessSwapRequest(--m_index);
+        SendAndProcessSwapRequest(-1);
     }
 
-    /// <summary>
-    /// Send a swap request to the frontman of the options menu, and receives a response from wherever it got it from to process.
-    /// </summary>
-    private void SendAndProcessSwapRequest(int _index)
+    private void SendAndProcessSwapRequest(int _offset)
     {
-        var response = m_queueRequest.Invoke(m_type, _index);
+        m_linkedPart.ProcessSwap(_offset);
+    }
 
-        m_activeSelection.text  = response.part.name;
-        m_index                 = response.responseIndex;
+    private void OnAttachedPartUpdated(SwapCallbackResponse _response)
+    {
+        m_activeSelection.text = _response.chosenPartName;
+    }
+
+    private void OnDestroy()
+    {
+        m_linkedPart.UnsubrscibeFromCallback(OnAttachedPartUpdated);
     }
 }
