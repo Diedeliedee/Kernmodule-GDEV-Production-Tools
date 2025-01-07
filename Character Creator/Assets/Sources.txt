@@ -1,0 +1,3 @@
+File explorer by gkngkc: https://github.com/gkngkc/UnityStandaloneFileBrowser
+
+JSON from Newtonsoft: https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@3.0/manual/index.html

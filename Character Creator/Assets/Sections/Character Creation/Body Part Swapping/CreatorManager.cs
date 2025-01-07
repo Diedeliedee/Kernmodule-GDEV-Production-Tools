@@ -41,13 +41,13 @@ namespace BodyPartSwap
                 saveFile ??= new();
 
                 //  If the save file does not have information about a specific part, set it to the default index.
-                if (!saveFile.savedIndices.ContainsKey((int)pair.Key))
+                if (!saveFile.savedIndices.ContainsKey(pair.Key))
                 {
-                    saveFile.savedIndices.Add((int)pair.Key, 0);
+                    saveFile.savedIndices.Add(pair.Key, 0);
                 }
 
                 //  Update every active part's index with that of the save file's corresponding option.
-                pair.Value.UpdatePartWithIndex(saveFile.savedIndices[(int)pair.Key]);
+                pair.Value.UpdatePartWithIndex(saveFile.savedIndices[pair.Key]);
             }
         }
 
@@ -59,7 +59,7 @@ namespace BodyPartSwap
             //  Configure the save with the current part compilation's indices.
             foreach (var pair in m_partCompilation)
             {
-                newSave.savedIndices.Add((int)pair.Key, pair.Value.index);
+                newSave.savedIndices.Add(pair.Key, pair.Value.index);
             }
 
             //  Create extension filter for saving..

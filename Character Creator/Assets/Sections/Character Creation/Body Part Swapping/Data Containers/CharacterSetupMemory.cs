@@ -1,19 +1,20 @@
 using System.Collections.Generic;
+using BodyPartSwap;
 
 public class CharacterSetupMemory
 {
     /// <summary>
-    /// A dictionary of queue indices, attached to their corresponding part indices. The indices are ordered the same way the 'Options' enum is ordered.
+    /// A dictionary of queue indices, attached to their corresponding part enum value.
     /// </summary>
-    public Dictionary<int, int> savedIndices = new();
+    public Dictionary<Options, int> savedIndices = new();
 
     //  Example
     /*
     public Dictionary<int, int> savedIndices = new()
     {
-        { (int)Options.Head, 0 },
-        { (int)Options.Torso, 0 },
-        { (int)Options.Legs, 0 },
+        { Options.Head, 0 },
+        { Options.Torso, 0 },
+        { Options.Legs, 0 },
     };
     */
 }

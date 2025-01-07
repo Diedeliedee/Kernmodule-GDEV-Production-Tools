@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using System.Text;
+using Newtonsoft.Json;
 
 public static class FileBridge
 {
@@ -8,7 +9,7 @@ public static class FileBridge
     {
         try
         {
-            var json            = JsonUtility.ToJson(_objectToSave, true);
+            var json            = JsonConvert.SerializeObject(_objectToSave);
             using var stream    = File.Create(_path);
 
             stream.Write(Encoding.UTF8.GetBytes(json));
@@ -32,7 +33,7 @@ public static class FileBridge
             }
 
             var json            = File.ReadAllText(_path);
-            var objectToLoad    = JsonUtility.FromJson<T>(json);
+            var objectToLoad    = JsonConvert.DeserializeObject<T>(json);
 
             return objectToLoad;
         }
