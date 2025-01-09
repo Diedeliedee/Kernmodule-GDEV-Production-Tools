@@ -35,4 +35,9 @@ public class ToolManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void RequestQuit()
+    {
+        Application.Quit();
+    }
 }

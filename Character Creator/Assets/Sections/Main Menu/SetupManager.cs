@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class SetupManager : MonoBehaviour
 {
     [SerializeField] private UnityEvent<CharacterSetupMemory> m_onStartRequested;
+    [SerializeField] private UnityEvent m_onQuitRequested;
 
     public void NewButtonPressed()
     {
@@ -30,5 +31,10 @@ public class SetupManager : MonoBehaviour
         var loadedSave = FileBridge.LoadFrom<CharacterSetupMemory>(paths[0]);
 
         m_onStartRequested.Invoke(loadedSave);
+    }
+
+    public void QuitButtonPressed()
+    {
+        m_onQuitRequested.Invoke();
     }
 }
