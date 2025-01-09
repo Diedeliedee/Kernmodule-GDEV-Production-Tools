@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BodyPartSwap
 {
-    public partial class ActiveBodyPart : MonoBehaviour, IChangeablePart
+    public partial class ActiveBodyPart : MonoBehaviour
     {
         [Header("Reference:")]
         [SerializeField] private OptionQueue m_queue;

@@ -27,7 +27,7 @@ class CreatorManager
   -torso : ActiveBodyPart
   -legs : ActiveBodyPart
   ..
-  -partCompilation : Dictionary<Options, IChangablePart>
+  -partCompilation : Dictionary<Options, ActiveBodyPart>
   ..
   -options : OptionFrontMan
   -pictureTaker : PictureTaker
@@ -37,34 +37,20 @@ class CreatorManager
   +OnBackRequestReceived() : void
 }
 
-interface IOptionInterface
-{
-  +Setup(compilation : Dictionary<Options, IChangeablePart>) : void
-}
-
-interface IChangablePart
-{
-  +type : Options
-  +index : int
-  
-  +SubscribeToCallback(callback : Action<SwapCallbackResponse>) 
-  +UnsubscribeFromCallback(callback : Action<SwapCallbackResponse>) 
-  +ProcessSwap(index : int) : SwapCallbackResponse
-  +ApplyIndex(index : int) : void
-}
-
-CreatorManager o-- IChangablePart
-CreatorManager *-- IOptionInterface
+CreatorManager o-- ActiveBodyPart
+CreatorManager *-- OptionFrontman
 CreatorManager *-- PictureTaker
 
-class OptionFrontman extends IOptionInterface
+class OptionFrontman
 {
   -options : List<OptionHandler>
+  
+  +Setup(compilation : Dictionary<Options, ActiveBodyPart>) : void
 }
 
 class OptionHandler
 {
-  -linkedPart : IChangablePart
+  -linkedPart : ActiveBodyPart
   
   +PullNext() : void
   +PullPrevious() : void
@@ -72,7 +58,7 @@ class OptionHandler
 }
 
 OptionFrontman o-- OptionHandler
-OptionHandler *-- IChangablePart
+OptionHandler *-l- ActiveBodyPart
 
 class OptionQueue <<ScriptableObject>>
 {
@@ -82,12 +68,20 @@ class OptionQueue <<ScriptableObject>>
   +GetFromQueue(index : int) : GameObject
 }
 
-class ActiveBodyPart extends IChangablePart
+class ActiveBodyPart
 {
+  +type : Options
+  +index : int
+  ..
   -queue : OptionQueue
   -modelObject : GameObject
   ..
   -onChanged : Action<SwapCallbackResponse>
+  
+  +SubscribeToCallback(callback : Action<SwapCallbackResponse>) 
+  +UnsubscribeFromCallback(callback : Action<SwapCallbackResponse>) 
+  +ProcessSwap(index : int) : SwapCallbackResponse
+  +ApplyIndex(index : int) : void
 }
 
 ActiveBodyPart *-- OptionQueue
@@ -113,7 +107,7 @@ enum Options
 
 class CharacterSetupMemory
 {
-  +savedIndices : Dictionary<int, int>
+  +savedIndices : Dictionary<Options, int>
 }
 
 struct SwapCallbackResponse
