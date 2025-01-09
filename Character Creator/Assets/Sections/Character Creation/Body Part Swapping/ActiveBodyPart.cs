@@ -32,7 +32,9 @@ namespace BodyPartSwap
 
         public void ProcessSwap(int _offset)
         {
-            var trueIndex = (m_index + _offset) % m_queue.queueLength;
+            int Modulo(int _a , int _b) => _a - _b * Mathf.FloorToInt((float)_a / (float)_b);
+
+            var trueIndex = Modulo((m_index + _offset), m_queue.queueLength);
 
             ApplyIndex(trueIndex);
         }
