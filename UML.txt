@@ -1,0 +1,131 @@
+@startuml
+
+class ToolManager
+{
+  -setup : SetupManager
+  -creator : CreatorManager
+  
+  +RequestMoveToCreator(saveFile : CharacterSetupMemory) : void
+  +RequestRealodTool() : void
+}
+
+ToolManager *-- SetupManager
+ToolManager *-- CreatorManager
+ToolManager *-l- Blackboard
+
+class SetupManager
+{
+  -onStartRequested : UnityEvent<CharacterSetupMemory>
+  
+  +NewButtonPressed() : void
+  +LoadButtonPressed() : void
+}
+
+class CreatorManager
+{
+  -head : ActiveBodyPart
+  -torso : ActiveBodyPart
+  -legs : ActiveBodyPart
+  ..
+  -partCompilation : Dictionary<Options, IChangablePart>
+  ..
+  -options : OptionFrontMan
+  -pictureTaker : PictureTaker
+  __
+  +OnSaveCommandReceived() : void
+  +OnExportCommandReceived() : void
+  +OnBackRequestReceived() : void
+}
+
+interface IOptionInterface
+{
+  +Setup(compilation : Dictionary<Options, IChangeablePart>) : void
+}
+
+interface IChangablePart
+{
+  +type : Options
+  +index : int
+  
+  +SubscribeToCallback(callback : Action<SwapCallbackResponse>) 
+  +UnsubscribeFromCallback(callback : Action<SwapCallbackResponse>) 
+  +ProcessSwap(index : int) : SwapCallbackResponse
+  +ApplyIndex(index : int) : void
+}
+
+CreatorManager o-- IChangablePart
+CreatorManager *-- IOptionInterface
+CreatorManager *-- PictureTaker
+
+class OptionFrontman extends IOptionInterface
+{
+  -options : List<OptionHandler>
+}
+
+class OptionHandler
+{
+  -linkedPart : IChangablePart
+  
+  +PullNext() : void
+  +PullPrevious() : void
+  -OnAttachedPartUpdated(response : SwapCallbackResponse) : void
+}
+
+OptionFrontman o-- OptionHandler
+OptionHandler *-- IChangablePart
+
+class OptionQueue <<ScriptableObject>>
+{
+  -type : Options
+  -parts : GameObject[]
+  
+  +GetFromQueue(index : int) : GameObject
+}
+
+class ActiveBodyPart extends IChangablePart
+{
+  -queue : OptionQueue
+  -modelObject : GameObject
+  ..
+  -onChanged : Action<SwapCallbackResponse>
+}
+
+ActiveBodyPart *-- OptionQueue
+
+class PictureTaker
+{
+  -renderTexture : RenderTexture
+  
+  +TakePicture() : void
+}
+
+class Blackboard <<Singleton>>
+{
+  +loadedSave : CharacterSetupMemory
+}
+
+enum Options
+{
+  Head,
+  Torso,
+  Legs
+}
+
+class CharacterSetupMemory
+{
+  +savedIndices : Dictionary<int, int>
+}
+
+struct SwapCallbackResponse
+{
+  +part : GameObject
+}
+
+class FileBridge <<Static>>
+{
+  +SaveTo<T>(objectToSave : T, path : string) : void
+  +SaveRawTo<T>(data : byte[], path : string) : void
+  +LoadFrom<T>(path : string) : T
+}
+
+@enduml

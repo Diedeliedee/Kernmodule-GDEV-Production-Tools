@@ -9,9 +9,9 @@ public class OptionHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_activeSelection;
 
     //  Cache:
-    private ActiveBodyPart m_linkedPart;
+    private IChangeablePart m_linkedPart;
 
-    public void Setup(ActiveBodyPart _linkedPart)
+    public void Setup(IChangeablePart _linkedPart)
     {
         m_linkedPart    = _linkedPart;
         m_header.text   = _linkedPart.type.ToString();

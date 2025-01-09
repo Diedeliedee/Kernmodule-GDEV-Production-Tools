@@ -2,7 +2,7 @@ using UnityEngine;
 using BodyPartSwap;
 using System.Collections.Generic;
 
-public class OptionFrontman : MonoBehaviour
+public class OptionFrontman : MonoBehaviour, IOptionInterface
 {
     [Header("Reference:")]
     [SerializeField] private Transform m_optionContentRoot;
@@ -11,7 +11,7 @@ public class OptionFrontman : MonoBehaviour
     //  Cache:
     private List<OptionHandler> m_options = new();
 
-    public void Setup(Dictionary<Options, ActiveBodyPart> _compilation)
+    public void Setup(Dictionary<Options, IChangeablePart> _compilation)
     {
         //  Attach all the parts to the corresponding option handlers.
         foreach (var pair in _compilation)

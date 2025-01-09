@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BodyPartSwap
 {
-    public partial class ActiveBodyPart : MonoBehaviour
+    public partial class ActiveBodyPart : MonoBehaviour, IChangeablePart
     {
         [Header("Reference:")]
         [SerializeField] private OptionQueue m_queue;
@@ -34,10 +34,10 @@ namespace BodyPartSwap
         {
             var trueIndex = (m_index + _offset) % m_queue.queueLength;
 
-            UpdatePartWithIndex(trueIndex);
+            ApplyIndex(trueIndex);
         }
 
-        public void UpdatePartWithIndex(int _index)
+        public void ApplyIndex(int _index)
         {
             var pulled              = m_queue.GetFromQueue(_index);
             var createdModelObject  = Instantiate(pulled, transform, false);

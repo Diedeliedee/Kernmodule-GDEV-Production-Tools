@@ -15,10 +15,10 @@ namespace BodyPartSwap
         [Header("Scene Events:")]
         [SerializeField] private UnityEvent m_onBackRequested;
 
-        private OptionFrontman m_options = null;
+        private IOptionInterface m_options  = null;
         private PictureTaker m_pictureTaker = null;
 
-        private Dictionary<Options, ActiveBodyPart> m_partCompilation = new();
+        private Dictionary<Options, IChangeablePart> m_partCompilation = new();
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
@@ -26,7 +26,7 @@ namespace BodyPartSwap
         public void Begin()
         {
             //  Find all components.
-            m_options       = GetComponentInChildren<OptionFrontman>();
+            m_options       = GetComponentInChildren<IOptionInterface>();
             m_pictureTaker  = GetComponentInChildren<PictureTaker>();
 
             //  Compile the loose part references into a dictionary
@@ -53,7 +53,7 @@ namespace BodyPartSwap
                 }
 
                 //  Update every active part's index with that of the save file's corresponding option.
-                pair.Value.UpdatePartWithIndex(saveFile.savedIndices[pair.Key]);
+                pair.Value.ApplyIndex(saveFile.savedIndices[pair.Key]);
             }
         }
 
