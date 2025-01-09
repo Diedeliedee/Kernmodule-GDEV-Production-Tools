@@ -213,6 +213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1422450980}
   - component: {fileID: 1422450981}
+  - component: {fileID: 1422450982}
   m_Layer: 0
   m_Name: Tool Manager
   m_TagString: Untagged
@@ -247,6 +248,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9a264b7c552d75419fdf62eee68fa89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1422450982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422450979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54943c0cfa1beeb41b253b27ba6c7aef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &928273313094549392
@@ -474,6 +487,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1422450981}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RequestReloadTool
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToolManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6880498066029462363, guid: 4aed0c9d6fb44cf499ff82d570239b50,
+        type: 3}
+      propertyPath: m_onBackRequested.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7084017283561134836, guid: 4aed0c9d6fb44cf499ff82d570239b50,
         type: 3}

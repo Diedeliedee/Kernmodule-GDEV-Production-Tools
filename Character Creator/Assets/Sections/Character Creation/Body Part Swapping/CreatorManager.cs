@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SFB;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace BodyPartSwap
 {
@@ -11,7 +12,11 @@ namespace BodyPartSwap
         [SerializeField] private ActiveBodyPart m_torso;
         [SerializeField] private ActiveBodyPart m_legs;
 
+        [Header("Scene Events:")]
+        [SerializeField] private UnityEvent m_onBackRequested;
+
         private OptionFrontman m_options = null;
+        private PictureTaker m_pictureTaker = null;
 
         private Dictionary<Options, ActiveBodyPart> m_partCompilation = new();
 
@@ -20,13 +25,14 @@ namespace BodyPartSwap
         /// </summary>
         public void Begin()
         {
+            //  Find all components.
+            m_options       = GetComponentInChildren<OptionFrontman>();
+            m_pictureTaker  = GetComponentInChildren<PictureTaker>();
+
             //  Compile the loose part references into a dictionary
             m_partCompilation.Add(Options.Head, m_head);
             m_partCompilation.Add(Options.Torso, m_torso);
             m_partCompilation.Add(Options.Legs, m_legs);
-
-            //  Find the option front man.
-            m_options = GetComponentInChildren<OptionFrontman>();
 
             //  Setup the options frontman.
             m_options.Setup(m_partCompilation);
@@ -35,7 +41,7 @@ namespace BodyPartSwap
             foreach (var pair in m_partCompilation)
             {
                 //  Load the save from the blackboard.
-                var saveFile = Blackboard.loadedSave;
+                var saveFile = Blackboard.instance.loadedSave;
 
                 //  Create a blank save if one is not found.
                 saveFile ??= new();
@@ -81,6 +87,16 @@ namespace BodyPartSwap
 
             //  Save the file to that path.
             FileBridge.SaveTo(newSave, path);
+        }
+
+        public void OnExportRequestReceived()
+        {
+            m_pictureTaker.TakePicture();
+        }
+
+        public void OnBackRequestReceived()
+        {
+            m_onBackRequested.Invoke();
         }
     }
 }

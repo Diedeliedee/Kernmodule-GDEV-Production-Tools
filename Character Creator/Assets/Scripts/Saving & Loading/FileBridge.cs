@@ -17,7 +17,23 @@ public static class FileBridge
         }
         catch
         {
-            Debug.Log($"Something went wrong trying to save {typeof(T)} to:\n{_path}");
+            Debug.Log($"Something went wrong trying to save {typeof(T)} to: {_path}");
+            return;
+        }
+    }
+
+    public static void SaveRawTo(byte[] _data, string _path)
+    {
+        try
+        {
+            using var stream = File.Create(_path);
+
+            stream.Write(_data);
+            Debug.Log($"File succesfully saved to:\n{_path}");
+        }
+        catch
+        {
+            Debug.Log($"Something went wrong trying to save raw byte array to: {_path}");
             return;
         }
     }
@@ -39,7 +55,7 @@ public static class FileBridge
         }
         catch
         {
-            Debug.Log($"Something went wrong trying to load {typeof(T)} from:\n{_path}");
+            Debug.Log($"Something went wrong trying to load {typeof(T)} from: {_path}");
             return default;
         }
     }
