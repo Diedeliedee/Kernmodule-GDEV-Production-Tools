@@ -34,7 +34,7 @@ public class PictureTaker : MonoBehaviour
         }
 
         //  Save the file to that path.
-        SaveBridge.SaveRawTo(bytes, path);
+        FileBridge.SaveRawTo(bytes, path);
     }
 
     private Texture2D ToTexture2D(RenderTexture _renderTexture)

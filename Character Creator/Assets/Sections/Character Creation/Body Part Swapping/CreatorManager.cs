@@ -86,7 +86,10 @@ namespace BodyPartSwap
             }
 
             //  Save the file to that path.
-            SaveBridge.SaveTo(newSave, path);
+            if (FileBridge.SaveTo(newSave, path))
+            {
+                RecentSaveTracker.RegisterRecentSave(path);
+            }
         }
 
         public void OnExportRequestReceived()
