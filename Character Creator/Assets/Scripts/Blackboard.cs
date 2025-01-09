@@ -1,6 +1,5 @@
 using UnityEngine;
 
-/// TODO: Defintely change this to a singleton, that resets upon scene reset later!!!
 public class Blackboard : MonoBehaviour
 {
     private static Blackboard m_instance;
