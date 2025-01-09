@@ -40,6 +40,9 @@ class CreatorManager
 CreatorManager o-- ActiveBodyPart
 CreatorManager *-- OptionFrontman
 CreatorManager *-- PictureTaker
+CreatorManager --> SaveBridge
+CreatorManager -l-> Options
+SaveBridge --> CharacterSetupMemory
 
 class OptionFrontman
 {
@@ -85,6 +88,7 @@ class ActiveBodyPart
 }
 
 ActiveBodyPart *-- OptionQueue
+ActiveBodyPart --> SwapCallbackResponse
 
 class PictureTaker
 {
@@ -110,16 +114,24 @@ class CharacterSetupMemory
   +savedIndices : Dictionary<Options, int>
 }
 
-struct SwapCallbackResponse
+class SwapCallbackResponse
 {
   +part : GameObject
 }
 
-class FileBridge <<Static>>
+class SaveBridge <<Static>>
 {
   +SaveTo<T>(objectToSave : T, path : string) : void
   +SaveRawTo<T>(data : byte[], path : string) : void
   +LoadFrom<T>(path : string) : T
 }
+
+class RecentSaveTracker <<Static>>
+{
+    +RegisterRecentSave(location : string) : void
+    +GetRegisteredSaves() : List<SaveRegistration>
+}
+
+SaveBridge --> RecentSaveTracker
 
 @enduml

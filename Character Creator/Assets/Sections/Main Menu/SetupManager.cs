@@ -27,7 +27,7 @@ public class SetupManager : MonoBehaviour
             return;
         }
 
-        var loadedSave = FileBridge.LoadFrom<CharacterSetupMemory>(paths[0]);
+        var loadedSave = SaveBridge.LoadFrom(paths[0]);
 
         m_onStartRequested.Invoke(loadedSave);
     }

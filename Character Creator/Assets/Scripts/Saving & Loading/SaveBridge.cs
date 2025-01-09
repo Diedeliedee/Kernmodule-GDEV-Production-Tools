@@ -3,9 +3,9 @@ using UnityEngine;
 using System.Text;
 using Newtonsoft.Json;
 
-public static class FileBridge
+public static class SaveBridge
 {
-    public static void SaveTo<T>(T _objectToSave, string _path)
+    public static void SaveTo(CharacterSetupMemory _objectToSave, string _path)
     {
         try
         {
@@ -13,11 +13,14 @@ public static class FileBridge
             using var stream    = File.Create(_path);
 
             stream.Write(Encoding.UTF8.GetBytes(json));
-            Debug.Log($"File succesfully saved {typeof(T)} to:\n{_path}");
+
+            RecentSaveTracker.RegisterRecentSave(_path);
+
+            Debug.Log($"File succesfully saved character to:\n{_path}");
         }
         catch
         {
-            Debug.Log($"Something went wrong trying to save {typeof(T)} to: {_path}");
+            Debug.Log($"Something went wrong trying to save character to: {_path}");
             return;
         }
     }
@@ -38,24 +41,24 @@ public static class FileBridge
         }
     }
 
-    public static T LoadFrom<T>(string _path)
+    public static CharacterSetupMemory LoadFrom(string _path)
     {
         try
         {
             if (!File.Exists(_path))
             {
-                Debug.LogError($"No file found at:\n{_path}");
+                Debug.LogError($"No character file found at:\n{_path}");
                 return default;
             }
 
             var json            = File.ReadAllText(_path);
-            var objectToLoad    = JsonConvert.DeserializeObject<T>(json);
+            var objectToLoad    = JsonConvert.DeserializeObject<CharacterSetupMemory>(json);
 
             return objectToLoad;
         }
         catch
         {
-            Debug.Log($"Something went wrong trying to load {typeof(T)} from: {_path}");
+            Debug.Log($"Something went wrong trying to load character from: {_path}");
             return default;
         }
     }
