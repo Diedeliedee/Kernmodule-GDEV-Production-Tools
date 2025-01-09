@@ -27,41 +27,61 @@ class CreatorManager
   -torso : ActiveBodyPart
   -legs : ActiveBodyPart
   ..
-  -partCompilation : Dictionary<Options, ActiveBodyPart>
+  -partCompilation : Dictionary<Options, IActiveElement>
   ..
   -options : OptionFrontMan
   -pictureTaker : PictureTaker
   __
+  +OnSwitchRequestReceived(type : Options, offset : int) : SwapCallbackResponse
   +OnSaveCommandReceived() : void
   +OnExportCommandReceived() : void
   +OnBackRequestReceived() : void
 }
 
-CreatorManager o-- ActiveBodyPart
-CreatorManager *-- OptionFrontman
-CreatorManager *-- PictureTaker
-CreatorManager --> SaveBridge
+interface IActiveElement
+{
+  +type : Options
+  +index : int
+  ..
+  +typeName : string
+  +selectedName : string
+  __
+  +ProcessSwap(offset : int) : SwapCallbackResponse
+  +ApplyIndex(index : int) : SwapCallbackResponse
+}
+
+interface IOptionInterface
+{
+  +Setup(compilation : Dictionary<Options, IActiveElement>) : void
+  +SubscribeToBroadcast(request : SwapRequest) : void
+  +UnsubscribeFromBroadcast(request : SwapRequest) : void
+}
+
+CreatorManager o--- IActiveElement
+CreatorManager *--- IOptionInterface
+CreatorManager *--- PictureTaker
+CreatorManager ---> SaveBridge
 CreatorManager -l-> Options
 SaveBridge --> CharacterSetupMemory
 
-class OptionFrontman
+class OptionFrontman extends IOptionInterface
 {
   -options : List<OptionHandler>
   
-  +Setup(compilation : Dictionary<Options, ActiveBodyPart>) : void
+  -HandleSwapRequest(type : Options, offset : int) : SwapCallbackResponse
 }
 
 class OptionHandler
 {
-  -linkedPart : ActiveBodyPart
+  -type : Options
+  -swapRequest : SwapRequest
   
   +PullNext() : void
   +PullPrevious() : void
-  -OnAttachedPartUpdated(response : SwapCallbackResponse) : void
+  -SendAndProcessSwapRequest(offset : int) : void
 }
 
 OptionFrontman o-- OptionHandler
-OptionHandler *-l- ActiveBodyPart
 
 class OptionQueue <<ScriptableObject>>
 {
@@ -71,20 +91,13 @@ class OptionQueue <<ScriptableObject>>
   +GetFromQueue(index : int) : GameObject
 }
 
-class ActiveBodyPart
+class ActiveBodyPart extends IActiveElement
 {
-  +type : Options
-  +index : int
-  ..
   -queue : OptionQueue
   -modelObject : GameObject
   ..
-  -onChanged : Action<SwapCallbackResponse>
-  
-  +SubscribeToCallback(callback : Action<SwapCallbackResponse>) 
-  +UnsubscribeFromCallback(callback : Action<SwapCallbackResponse>) 
   +ProcessSwap(index : int) : SwapCallbackResponse
-  +ApplyIndex(index : int) : void
+  +ApplyIndex(index : int) : SwapCallbackResponse
 }
 
 ActiveBodyPart *-- OptionQueue
@@ -116,6 +129,8 @@ class CharacterSetupMemory
 
 class SwapCallbackResponse
 {
+  +result : Result
+  +name : string
   +part : GameObject
 }
 

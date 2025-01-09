@@ -9,14 +9,17 @@ public class OptionHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_activeSelection;
 
     //  Cache:
-    private ActiveBodyPart m_linkedPart;
+    private Options m_type = default;
 
-    public void Setup(ActiveBodyPart _linkedPart)
+    //  Events:
+    private IOptionInterface.SwapRequest m_swapRequest = null;
+
+    public void Setup(Options _type, string _headerName, string _selectedName, IOptionInterface.SwapRequest _request)
     {
-        m_linkedPart    = _linkedPart;
-        m_header.text   = _linkedPart.type.ToString();
-
-        _linkedPart.SubscribeToCallback(OnAttachedPartUpdated);
+        m_type                  = _type;
+        m_header.text           = _headerName;
+        m_activeSelection.text  = _selectedName;
+        m_swapRequest           = _request;
     }
 
     public void PullNext()
@@ -31,16 +34,20 @@ public class OptionHandler : MonoBehaviour
 
     private void SendAndProcessSwapRequest(int _offset)
     {
-        m_linkedPart.ProcessSwap(_offset);
-    }
+        if (m_swapRequest == null)
+        {
+            Debug.LogWarning("No listener has been attached to this options' swap request! Be advised..", this);
+            return;
+        }
 
-    private void OnAttachedPartUpdated(SwapCallbackResponse _response)
-    {
-        m_activeSelection.text = _response.chosenPartName;
-    }
+        var response = m_swapRequest.Invoke(m_type, _offset);
 
-    private void OnDestroy()
-    {
-        m_linkedPart.UnsubrscibeFromCallback(OnAttachedPartUpdated);
+        if (response.result == SwapCallbackResponse.Result.Failure)
+        {
+            Debug.LogWarning("Something went wrong while trying to swap a body part! Be advised..", this);
+            return;
+        }
+
+        m_activeSelection.text = response.name;
     }
 }

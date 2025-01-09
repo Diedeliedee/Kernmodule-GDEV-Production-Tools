@@ -15,10 +15,10 @@ namespace BodyPartSwap
         [Header("Scene Events:")]
         [SerializeField] private UnityEvent m_onBackRequested;
 
-        private OptionFrontman m_options  = null;
+        private OptionFrontman m_options    = null;
         private PictureTaker m_pictureTaker = null;
 
-        private Dictionary<Options, ActiveBodyPart> m_partCompilation = new();
+        private Dictionary<Options, IActiveElement> m_partCompilation = new();
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
@@ -33,9 +33,6 @@ namespace BodyPartSwap
             m_partCompilation.Add(Options.Head, m_head);
             m_partCompilation.Add(Options.Torso, m_torso);
             m_partCompilation.Add(Options.Legs, m_legs);
-
-            //  Setup the options frontman.
-            m_options.Setup(m_partCompilation);
 
             //  Iterate, and initialize every part in the compilation.
             foreach (var pair in m_partCompilation)
@@ -55,6 +52,24 @@ namespace BodyPartSwap
                 //  Update every active part's index with that of the save file's corresponding option.
                 pair.Value.ApplyIndex(saveFile.savedIndices[pair.Key]);
             }
+
+            //  Setup the options frontman.
+            m_options.Setup(m_partCompilation);
+            m_options.SubsribeToBroadcast(OnSwapRequestReceived);
+        }
+
+        /// <summary>
+        /// Called whenever the OptionManager broadcasts that one of it's option buttons has requested a body part swap.
+        /// </summary>
+        public SwapCallbackResponse OnSwapRequestReceived(Options _type, int _offset)
+        {
+            if (!m_partCompilation.ContainsKey(_type))
+            {
+                Debug.LogError($"Warning! The swappable element of type {_type} is not found in the manager's dictionary!", this);
+                return default;
+            }
+
+            return m_partCompilation[_type].ProcessSwap(_offset);
         }
 
         public void OnSaveRequestReceived()
@@ -100,6 +115,11 @@ namespace BodyPartSwap
         public void OnBackRequestReceived()
         {
             m_onBackRequested.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            m_options.UnsubscribeFromBroadcast(OnSwapRequestReceived);
         }
     }
 }

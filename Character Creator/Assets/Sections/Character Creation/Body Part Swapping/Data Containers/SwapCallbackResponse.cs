@@ -7,8 +7,14 @@ namespace BodyPartSwap
     /// </summary>
     public struct SwapCallbackResponse
     {
+        public Result result;
+        public string name;
         public GameObject part;
 
-        public string chosenPartName => part.name;
+        public enum Result
+        {
+            Failure,
+            Success,
+        }
     }
 }
