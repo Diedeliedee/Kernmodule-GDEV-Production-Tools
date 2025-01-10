@@ -86,15 +86,23 @@ OptionFrontman o-- OptionHandler
 class OptionQueue <<ScriptableObject>>
 {
   -type : Options
-  -parts : GameObject[]
+  -parts : PartInfo[]
   
-  +GetFromQueue(index : int) : GameObject
+  +GetFromQueue(index : int) : PartInfo
 }
+
+class PartInfo
+{
+  +mesh : Mesh
+  +material : Material
+}
+
+OptionQueue o-- PartInfo
 
 class ActiveBodyPart extends IActiveElement
 {
   -queue : OptionQueue
-  -modelObject : GameObject
+  -meshRenderer : MeshRenderer
   ..
   +ProcessSwap(index : int) : SwapCallbackResponse
   +ApplyIndex(index : int) : SwapCallbackResponse
@@ -131,7 +139,7 @@ class SwapCallbackResponse
 {
   +result : Result
   +name : string
-  +part : GameObject
+  +part : PartInfo
 }
 
 class SaveBridge <<Static>>

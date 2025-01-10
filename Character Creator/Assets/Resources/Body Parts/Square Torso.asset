@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3743f593e8cc524a8384f0192ed802d, type: 3}
+  m_Name: Square Torso
+  m_EditorClassIdentifier: 
+  m_mesh: {fileID: 2346716986137308042, guid: 42248586c1b403240b3396de64a7c919, type: 3}
+  m_material: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}

@@ -9,7 +9,7 @@ namespace BodyPartSwap
     {
         public Result result;
         public string name;
-        public GameObject part;
+        public PartInfo part;
 
         public enum Result
         {
