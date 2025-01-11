@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SFB;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,18 +6,13 @@ namespace BodyPartSwap
 {
     public class CreatorManager : MonoBehaviour
     {
-        [Header("Scene References:")]
-        [SerializeField] private ActiveBodyPart m_head;
-        [SerializeField] private ActiveBodyPart m_torso;
-        [SerializeField] private ActiveBodyPart m_legs;
-
         [Header("Scene Events:")]
         [SerializeField] private UnityEvent m_onBackRequested;
+        [SerializeField] private UnityEvent m_onPhotoModeRequested;
 
-        private OptionFrontman m_options    = null;
-        private PictureTaker m_pictureTaker = null;
-
-        private Dictionary<Options, IActiveElement> m_partCompilation = new();
+        private BodyComposition m_composition   = null;
+        private OptionFrontman m_options        = null;
+        private PictureTaker m_pictureTaker     = null;
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
@@ -26,50 +20,23 @@ namespace BodyPartSwap
         public void Begin()
         {
             //  Find all components.
+            m_composition   = GetComponentInChildren<BodyComposition>();
             m_options       = GetComponentInChildren<OptionFrontman>();
             m_pictureTaker  = GetComponentInChildren<PictureTaker>();
 
-            //  Compile the loose part references into a dictionary
-            m_partCompilation.Add(Options.Head, m_head);
-            m_partCompilation.Add(Options.Torso, m_torso);
-            m_partCompilation.Add(Options.Legs, m_legs);
+            //  Load the save from the blackboard.
+            var saveFile = Blackboard.instance.loadedSave;
 
-            //  Iterate, and initialize every part in the compilation.
-            foreach (var pair in m_partCompilation)
-            {
-                //  Load the save from the blackboard.
-                var saveFile = Blackboard.instance.loadedSave;
+            //  Create a blank save if one is not found.
+            saveFile ??= new();
 
-                //  Create a blank save if one is not found.
-                saveFile ??= new();
-
-                //  If the save file does not have information about a specific part, set it to the default index.
-                if (!saveFile.savedIndices.ContainsKey(pair.Key))
-                {
-                    saveFile.savedIndices.Add(pair.Key, 0);
-                }
-
-                //  Update every active part's index with that of the save file's corresponding option.
-                pair.Value.ApplyIndex(saveFile.savedIndices[pair.Key]);
-            }
+            //  Setup the body composition.
+            m_composition.Setup();
+            m_composition.ApplyConfiguration(saveFile);
 
             //  Setup the options frontman.
-            m_options.Setup(m_partCompilation);
-            m_options.SubsribeToBroadcast(OnSwapRequestReceived);
-        }
-
-        /// <summary>
-        /// Called whenever the OptionManager broadcasts that one of it's option buttons has requested a body part swap.
-        /// </summary>
-        public SwapCallbackResponse OnSwapRequestReceived(Options _type, int _offset)
-        {
-            if (!m_partCompilation.ContainsKey(_type))
-            {
-                Debug.LogError($"Warning! The swappable element of type {_type} is not found in the manager's dictionary!", this);
-                return default;
-            }
-
-            return m_partCompilation[_type].ProcessSwap(_offset);
+            m_options.Setup(m_composition.compilation);
+            m_options.SubsribeToBroadcast(m_composition.ProcessIncomingSwap);
         }
 
         public void OnSaveRequestReceived()
@@ -78,7 +45,7 @@ namespace BodyPartSwap
             var newSave = new CharacterSetupMemory();
 
             //  Configure the save with the current part compilation's indices.
-            foreach (var pair in m_partCompilation)
+            foreach (var pair in m_composition.compilation)
             {
                 newSave.savedIndices.Add(pair.Key, pair.Value.index);
             }
@@ -109,7 +76,7 @@ namespace BodyPartSwap
 
         public void OnExportRequestReceived()
         {
-            m_pictureTaker.TakePicture();
+            m_onPhotoModeRequested.Invoke();
         }
 
         public void OnBackRequestReceived()
@@ -119,7 +86,7 @@ namespace BodyPartSwap
 
         private void OnDestroy()
         {
-            m_options.UnsubscribeFromBroadcast(OnSwapRequestReceived);
+            m_options.UnsubscribeFromBroadcast(m_composition.ProcessIncomingSwap);
         }
     }
 }

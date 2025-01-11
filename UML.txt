@@ -23,12 +23,7 @@ class SetupManager
 
 class CreatorManager
 {
-  -head : ActiveBodyPart
-  -torso : ActiveBodyPart
-  -legs : ActiveBodyPart
-  ..
-  -partCompilation : Dictionary<Options, IActiveElement>
-  ..
+  -composition : BodyComposition
   -options : OptionFrontMan
   -pictureTaker : PictureTaker
   __
@@ -57,7 +52,7 @@ interface IOptionInterface
   +UnsubscribeFromBroadcast(request : SwapRequest) : void
 }
 
-CreatorManager o--- IActiveElement
+CreatorManager o--- BodyComposition
 CreatorManager *--- IOptionInterface
 CreatorManager *--- PictureTaker
 CreatorManager ---> SaveBridge
@@ -99,6 +94,19 @@ class PartInfo
 
 OptionQueue o-- PartInfo
 
+class BodyComposition
+{
+  -head : ActiveBodyPart
+  -torso : ActiveBodyPart
+  -legs : ActiveBodyPart
+  ..
+  -partCompilation : Dictionary<Options, IActiveElement>
+  __
+  +Setup() : void
+  +ApplyConfiguration(configuration : CharacterSetupMemory) : void
+  +ProcessIncompingSwap(type : Options, offset int) : SwapCallbackResponse
+}
+
 class ActiveBodyPart extends IActiveElement
 {
   -queue : OptionQueue
@@ -108,6 +116,7 @@ class ActiveBodyPart extends IActiveElement
   +ApplyIndex(index : int) : SwapCallbackResponse
 }
 
+BodyComposition o-- IActiveElement
 ActiveBodyPart *-- OptionQueue
 ActiveBodyPart --> SwapCallbackResponse
 
