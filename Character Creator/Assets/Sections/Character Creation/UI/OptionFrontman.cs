@@ -23,8 +23,17 @@ public class OptionFrontman : MonoBehaviour, IOptionInterface
             var spawnedOption = Instantiate(m_optionPrefab, m_optionContentRoot, false).GetComponent<OptionHandler>();
 
             //  Set-up, and add to the list.
-            spawnedOption.Setup(pair.Key, pair.Value.typeName, pair.Value.selectedName, HandleSwapRequest);
+            spawnedOption.Setup(pair.Key, pair.Value.typeName, HandleSwapRequest);
             m_options.Add(spawnedOption);
+        }
+    }
+
+    public void ApplyCompilation(Dictionary<Options, IActiveElement> _compilation)
+    {
+        foreach (var option in m_options)
+        {
+            if (!_compilation.ContainsKey(option.type)) continue;
+            option.ApplyStatus(_compilation[option.type].selectedName);
         }
     }
 

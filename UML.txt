@@ -2,20 +2,28 @@
 
 class ToolManager
 {
+  -blackboard : Blackboard
+  ..
   -setup : SetupManager
   -creator : CreatorManager
+  -photo : PhotoManager
   
-  +RequestMoveToCreator(saveFile : CharacterSetupMemory) : void
-  +RequestRealodTool() : void
+  +RequestStartCharacterCreator(saveFile : CharacterSetupMemory) : void
+  +ReqyestStartCharacterCreator() : void
+  +RequestMoveToPhotoMode : void
+  +RequestReloadTool() : void
+  +RequestQuit() : void
 }
 
 ToolManager *-- SetupManager
 ToolManager *-- CreatorManager
+ToolManager *-- PhotoManager
 ToolManager *-l- Blackboard
 
 class SetupManager
 {
-  -onStartRequested : UnityEvent<CharacterSetupMemory>
+  -onStartRequested : UnityEvent
+  -onQuitRequested : UnityEvent
   
   +NewButtonPressed() : void
   +LoadButtonPressed() : void
@@ -25,13 +33,29 @@ class CreatorManager
 {
   -composition : BodyComposition
   -options : OptionFrontMan
-  -pictureTaker : PictureTaker
   __
+  +ApplySaveFile(save : CharacterSetupMemory) : void
   +OnSwitchRequestReceived(type : Options, offset : int) : SwapCallbackResponse
   +OnSaveCommandReceived() : void
   +OnExportCommandReceived() : void
   +OnBackRequestReceived() : void
 }
+
+class PhotoManager
+{
+  -composition : BodyComposition
+  -pictureTaker : PictureTaker
+  __
+  +ApplyConfiguration(configuration : Dictionary<Options, int>) : void
+  +RequestGoBack() : void
+  +TakePicture() : void
+  
+}
+
+CreatorManager o--- BodyComposition
+CreatorManager *--- IOptionInterface
+CreatorManager -l-> Options
+PhotoManager *--- PictureTaker
 
 interface IActiveElement
 {
@@ -48,16 +72,10 @@ interface IActiveElement
 interface IOptionInterface
 {
   +Setup(compilation : Dictionary<Options, IActiveElement>) : void
+  +ApplyCompilation(_compilation : Dictionary<Options, IActiveElement>) : void
   +SubscribeToBroadcast(request : SwapRequest) : void
   +UnsubscribeFromBroadcast(request : SwapRequest) : void
 }
-
-CreatorManager o--- BodyComposition
-CreatorManager *--- IOptionInterface
-CreatorManager *--- PictureTaker
-CreatorManager ---> SaveBridge
-CreatorManager -l-> Options
-SaveBridge --> CharacterSetupMemory
 
 class OptionFrontman extends IOptionInterface
 {
@@ -71,6 +89,7 @@ class OptionHandler
   -type : Options
   -swapRequest : SwapRequest
   
+  +ApplyStatus(selectedName : string) : void
   +PullNext() : void
   +PullPrevious() : void
   -SendAndProcessSwapRequest(offset : int) : void
@@ -103,7 +122,8 @@ class BodyComposition
   -partCompilation : Dictionary<Options, IActiveElement>
   __
   +Setup() : void
-  +ApplyConfiguration(configuration : CharacterSetupMemory) : void
+  +ApplyConfiguration(_compilation : Dictionary<Options, int>) : void
+  +ExtractConfiguration() : Dictionary<Options, int>
   +ProcessIncompingSwap(type : Options, offset int) : SwapCallbackResponse
 }
 
@@ -130,6 +150,7 @@ class PictureTaker
 class Blackboard <<Singleton>>
 {
   +loadedSave : CharacterSetupMemory
+  +activeConfiguration : Dictionary<Options, int>
 }
 
 enum Options
@@ -151,6 +172,13 @@ class SwapCallbackResponse
   +part : PartInfo
 }
 
+class ExplorerWrapper <<static>>
+{
+  +GetSaveLocation(header : string, defaultName : string, extensions : ExtensionFilter[])
+  +GetLoadLocation(header : string, extensions : ExtensionFilter[])
+
+}
+
 class SaveBridge <<Static>>
 {
   +SaveTo<T>(objectToSave : T, path : string) : void
@@ -165,5 +193,6 @@ class RecentSaveTracker <<Static>>
 }
 
 SaveBridge --> RecentSaveTracker
+SaveBridge --> CharacterSetupMemory
 
 @enduml

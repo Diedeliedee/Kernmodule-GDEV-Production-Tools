@@ -14,12 +14,19 @@ public class OptionHandler : MonoBehaviour
     //  Events:
     private IOptionInterface.SwapRequest m_swapRequest = null;
 
-    public void Setup(Options _type, string _headerName, string _selectedName, IOptionInterface.SwapRequest _request)
+    //  Properties:
+    public Options type => m_type;
+
+    public void Setup(Options _type, string _headerName, IOptionInterface.SwapRequest _request)
     {
         m_type                  = _type;
         m_header.text           = _headerName;
-        m_activeSelection.text  = _selectedName;
         m_swapRequest           = _request;
+    }
+
+    public void ApplyStatus(string _selectedName)
+    {
+        m_activeSelection.text  = _selectedName;
     }
 
     public void PullNext()
@@ -48,6 +55,6 @@ public class OptionHandler : MonoBehaviour
             return;
         }
 
-        m_activeSelection.text = response.name;
+        ApplyStatus(response.name);
     }
 }

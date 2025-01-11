@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using BodyPartSwap;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +8,7 @@ public class ToolManager : MonoBehaviour
 
     private SetupManager m_setup        = null;
     private CreatorManager m_creator    = null;
+    private PhotoManager m_photo        = null;
 
     private void Awake()
     {
@@ -17,18 +16,37 @@ public class ToolManager : MonoBehaviour
 
         m_setup     = GetComponentInChildren<SetupManager>(true);
         m_creator   = GetComponentInChildren<CreatorManager>(true);
+        m_photo     = GetComponentInChildren<PhotoManager>(true);
 
         Blackboard.ResetBlackboard(m_blackboard);
+
+        m_creator.Setup();
+        m_photo.Setup();
     }
 
-    public void RequestMoveToCreator(CharacterSetupMemory _saveFile)
+    public void RequestStartCharacterCreator()
     {
-        Blackboard.instance.loadedSave = _saveFile;
+        RequestMoveToCreator();
 
+        m_creator.ApplySaveFile(Blackboard.instance.loadedSave);
+    }
+
+    public void RequestMoveToCreator()
+    {
         m_setup.gameObject.SetActive(false);
-        m_creator.gameObject.SetActive(true);
+        m_photo.gameObject.SetActive(false);
 
-        m_creator.Begin();
+        m_creator.gameObject.SetActive(true);
+    }
+
+    public void RequestMoveToPhotoMode()
+    {
+        m_setup.gameObject.SetActive(false);
+        m_creator.gameObject.SetActive(false);
+
+        m_photo.gameObject.SetActive(true);
+
+        m_photo.ApplyConfiguration(Blackboard.instance.activeConfiguration);
     }
 
     public void RequestReloadTool()

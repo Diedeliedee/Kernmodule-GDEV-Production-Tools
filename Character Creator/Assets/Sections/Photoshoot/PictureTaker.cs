@@ -17,21 +17,8 @@ public class PictureTaker : MonoBehaviour
         //  Testing purposes. :)
         //File.WriteAllBytes(Application.dataPath + "/../SavedScreen.png", bytes);
 
-        //  Create extension filter for saving..
-        var extenstions = new ExtensionFilter[]
-        {
-            new("Image Files", "png"),
-        };
-
         //  Load a path via the file browser.
-        var path = StandaloneFileBrowser.SaveFilePanel("Save Photo", Application.persistentDataPath, "Nice Picture", extenstions);
-
-        //  Error handling.
-        if (string.IsNullOrEmpty(path))
-        {
-            Debug.LogError("Something went wrong during file selection! Beware..", this);
-            return;
-        }
+        var path = ExplorerWrapper.GetSaveLocation("Save Photo", "Nice Picture", ExplorerWrapper.pngFilter);
 
         //  Save the file to that path.
         FileBridge.SaveRawTo(bytes, path);

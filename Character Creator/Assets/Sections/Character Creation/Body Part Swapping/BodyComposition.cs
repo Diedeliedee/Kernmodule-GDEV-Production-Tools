@@ -21,7 +21,7 @@ public class BodyComposition : MonoBehaviour
         m_partCompilation.Add(Options.Legs, m_legs);
     }
 
-    public void ApplyConfiguration(CharacterSetupMemory _configuration)
+    public void ApplyConfiguration(Dictionary<Options, int> _configuration)
     {
         if (m_partCompilation.Count <= 0)
         {
@@ -33,14 +33,25 @@ public class BodyComposition : MonoBehaviour
         foreach (var pair in m_partCompilation)
         {
             //  If the save file does not have information about a specific part, set it to the default index.
-            if (!_configuration.savedIndices.ContainsKey(pair.Key))
+            if (!_configuration.ContainsKey(pair.Key))
             {
-                _configuration.savedIndices.Add(pair.Key, 0);
+                _configuration.Add(pair.Key, 0);
             }
 
             //  Update every active part's index with that of the save file's corresponding option.
-            pair.Value.ApplyIndex(_configuration.savedIndices[pair.Key]);
+            pair.Value.ApplyIndex(_configuration[pair.Key]);
         }
+    }
+
+    public Dictionary<Options, int> ExtractConfiguration()
+    {
+        var configuration = new Dictionary<Options, int>();
+
+        foreach (var pair in m_partCompilation)
+        {
+            configuration.Add(pair.Key, pair.Value.index);
+        }
+        return configuration;
     }
 
     public SwapCallbackResponse ProcessIncomingSwap(Options _type, int _offset)

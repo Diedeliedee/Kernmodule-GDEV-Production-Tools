@@ -6,6 +6,8 @@ namespace BodyPartSwap
 	{
         public void Setup(Dictionary<Options, IActiveElement> _compilation);
 
+        public void ApplyCompilation(Dictionary<Options, IActiveElement> _compilation);
+
         public void SubsribeToBroadcast(SwapRequest _request);
 
         public void UnsubscribeFromBroadcast(SwapRequest _request);

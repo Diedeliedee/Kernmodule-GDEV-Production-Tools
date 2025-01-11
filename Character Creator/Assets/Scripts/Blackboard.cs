@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using BodyPartSwap;
 using UnityEngine;
 
 public class Blackboard : MonoBehaviour
@@ -17,7 +19,8 @@ public class Blackboard : MonoBehaviour
         }
     }
 
-    public CharacterSetupMemory loadedSave = null;
+    public CharacterSetupMemory loadedSave              = null;
+    public Dictionary<Options, int> activeConfiguration = null;
 
     public static void ResetBlackboard(Blackboard _instance)
     {

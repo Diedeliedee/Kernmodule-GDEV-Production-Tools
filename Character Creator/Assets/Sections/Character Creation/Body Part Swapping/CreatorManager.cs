@@ -1,4 +1,3 @@
-using SFB;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,31 +11,32 @@ namespace BodyPartSwap
 
         private BodyComposition m_composition   = null;
         private OptionFrontman m_options        = null;
-        private PictureTaker m_pictureTaker     = null;
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
         /// </summary>
-        public void Begin()
+        public void Setup()
         {
             //  Find all components.
-            m_composition   = GetComponentInChildren<BodyComposition>();
-            m_options       = GetComponentInChildren<OptionFrontman>();
-            m_pictureTaker  = GetComponentInChildren<PictureTaker>();
-
-            //  Load the save from the blackboard.
-            var saveFile = Blackboard.instance.loadedSave;
-
-            //  Create a blank save if one is not found.
-            saveFile ??= new();
+            m_composition   = GetComponentInChildren<BodyComposition>(true);
+            m_options       = GetComponentInChildren<OptionFrontman>(true);
 
             //  Setup the body composition.
             m_composition.Setup();
-            m_composition.ApplyConfiguration(saveFile);
 
             //  Setup the options frontman.
             m_options.Setup(m_composition.compilation);
             m_options.SubsribeToBroadcast(m_composition.ProcessIncomingSwap);
+        }
+
+        public void ApplySaveFile(CharacterSetupMemory _save)
+        {
+            //  Create a blank save if one is not found.
+            _save ??= new();
+
+            //  Apply.
+            m_composition.ApplyConfiguration(_save.savedIndices);
+            m_options.ApplyCompilation(m_composition.compilation);
         }
 
         public void OnSaveRequestReceived()
@@ -50,15 +50,8 @@ namespace BodyPartSwap
                 newSave.savedIndices.Add(pair.Key, pair.Value.index);
             }
 
-            //  Create extension filter for saving..
-            var extenstions = new ExtensionFilter[]
-            {
-                new("Json Files", "json"),
-                new("Text Files", "txt"),
-            };
-
             //  Load a path via the file browser.
-            var path = StandaloneFileBrowser.SaveFilePanel("Save Character File", Application.persistentDataPath, "My Character", extenstions);
+            var path = ExplorerWrapper.GetSaveLocation("Save Character File", "My Character", ExplorerWrapper.jsonFilter);
 
             //  Error handling.
             if (string.IsNullOrEmpty(path))
@@ -76,6 +69,8 @@ namespace BodyPartSwap
 
         public void OnExportRequestReceived()
         {
+            Blackboard.instance.activeConfiguration = m_composition.ExtractConfiguration();
+
             m_onPhotoModeRequested.Invoke();
         }
 
