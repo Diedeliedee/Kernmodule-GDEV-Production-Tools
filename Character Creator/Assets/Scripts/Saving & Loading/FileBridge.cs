@@ -9,7 +9,7 @@ public static class FileBridge
     /// Saves a file to the computer to the given path.
     /// </summary>
     /// <returns>If the save was successful or not.</returns>
-    public static bool SaveTo<T>(T _objectToSave, string _path)
+    public static bool SaveTo<T>(T _objectToSave, string _path) where T : class
     {
         try
         {
@@ -18,7 +18,7 @@ public static class FileBridge
 
             stream.Write(Encoding.UTF8.GetBytes(json));
 
-            Debug.Log($"File succesfully saved {typeof(T)} to:\n{_path}");
+            Debug.Log($"File succesfully saved {typeof(T)} to: {_path}");
         }
         catch
         {
@@ -40,7 +40,7 @@ public static class FileBridge
             using var stream = File.Create(_path);
 
             stream.Write(_data);
-            Debug.Log($"File succesfully saved to:\n{_path}");
+            Debug.Log($"File succesfully saved to: {_path}");
         }
         catch
         {
@@ -55,14 +55,14 @@ public static class FileBridge
     /// Loads a file from the given location through the given path.
     /// </summary>
     /// <returns>The loaded and deserialized object.</returns>
-    public static T LoadFrom<T>(string _path)
+    public static T LoadFrom<T>(string _path) where T : class
     {
         try
         {
             if (!File.Exists(_path))
             {
-                Debug.LogError($"No file found at:\n{_path}");
-                return default;
+                Debug.LogError($"No file found at: {_path}");
+                return null;
             }
 
             var json            = File.ReadAllText(_path);
@@ -73,7 +73,7 @@ public static class FileBridge
         catch
         {
             Debug.Log($"Something went wrong trying to load {typeof(T)} from: {_path}");
-            return default;
+            return null;
         }
     }
 }

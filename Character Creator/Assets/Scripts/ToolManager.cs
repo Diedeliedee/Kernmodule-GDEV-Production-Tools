@@ -20,6 +20,7 @@ public class ToolManager : MonoBehaviour
 
         Blackboard.ResetBlackboard(m_blackboard);
 
+        m_setup.Setup();
         m_creator.Setup();
         m_photo.Setup();
     }

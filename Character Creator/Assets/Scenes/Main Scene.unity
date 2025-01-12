@@ -377,6 +377,26 @@ PrefabInstance:
       propertyPath: m_onQuitRequested.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3233623763967200146, guid: b795f48116333c44a919538744d7773c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233623763967200146, guid: b795f48116333c44a919538744d7773c,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233623763967200146, guid: b795f48116333c44a919538744d7773c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233623763967200146, guid: b795f48116333c44a919538744d7773c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8074338575150608044, guid: b795f48116333c44a919538744d7773c,
         type: 3}
       propertyPath: m_Name
