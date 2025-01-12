@@ -27,6 +27,7 @@ class SetupManager
   
   +NewButtonPressed() : void
   +LoadButtonPressed() : void
+  +RecentLoadButtonPressed() : void
 }
 
 class CreatorManager
@@ -52,10 +53,32 @@ class PhotoManager
   
 }
 
-CreatorManager o--- BodyComposition
-CreatorManager *--- IOptionInterface
+SetupManager *-- RecentSaveDisplay
+CreatorManager o-- BodyComposition
+CreatorManager *-- IOptionInterface
 CreatorManager -l-> Options
 PhotoManager *--- PictureTaker
+
+class RecentSaveDisplay
+{
+  -warningText : WarningText
+  ..
+  -onSaveSelected : UnityEvent<CharacterSetupMemory>
+  ..
+  -displays : List<RecentSaveButton
+  __
+  +HandleSave(registration: SaveRegistration) : void
+}
+
+class RecentSaveButton
+{
+  -registration : SaveRegistration
+  +onSaveSelected : UnityEvent<SaveRegistration>
+  
+  +OnButtonPressed() : void
+}
+
+RecentSaveDisplay o-- RecentSaveButton
 
 interface IActiveElement
 {
@@ -192,7 +215,15 @@ class RecentSaveTracker <<Static>>
     +GetRegisteredSaves() : List<SaveRegistration>
 }
 
+class SaveRegistration
+{
+  +location : string
+  +date : string
+  +version : string
+}
+
 SaveBridge --> RecentSaveTracker
 SaveBridge --> CharacterSetupMemory
+RecentSaveTracker --> SaveRegistration
 
 @enduml
