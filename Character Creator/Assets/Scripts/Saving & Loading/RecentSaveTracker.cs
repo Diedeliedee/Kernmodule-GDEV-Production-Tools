@@ -21,7 +21,7 @@ public static class RecentSaveTracker
         var registration    = new SaveRegistration()
         {
             location    = _location,
-            date        = date.ToString("dd-MM-yyyy-mm-HH"),
+            date        = date.ToString("g"),
             version     = GlobalData.version
         };
 
