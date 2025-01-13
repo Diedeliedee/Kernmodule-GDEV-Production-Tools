@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Square Torso
   m_EditorClassIdentifier: 
   m_mesh: {fileID: 2346716986137308042, guid: 42248586c1b403240b3396de64a7c919, type: 3}
-  m_material: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_material: {fileID: 2100000, guid: dec91b0f5e7b9c34e8ba963fb47c001e, type: 2}

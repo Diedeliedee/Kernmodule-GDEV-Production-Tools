@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Sphere Torso
   m_EditorClassIdentifier: 
   m_mesh: {fileID: 2346716986137308042, guid: 43a8f32fc4384ef49a3e8cc3210f2806, type: 3}
-  m_material: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_material: {fileID: 2100000, guid: 34a3a56140a3b4d4398e49954f560343, type: 2}
