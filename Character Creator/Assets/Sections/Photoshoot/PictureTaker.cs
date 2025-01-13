@@ -26,8 +26,6 @@ public class PictureTaker : MonoBehaviour
 
     private Texture2D ToTexture2D(RenderTexture _renderTexture)
     {
-        Debug.Log(_renderTexture.format);
-
         var tex = new Texture2D(_renderTexture.width, _renderTexture.height, TextureFormat.ARGB32, false);
 
         RenderTexture.active = _renderTexture;

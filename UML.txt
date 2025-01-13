@@ -45,6 +45,7 @@ class CreatorManager
 class PhotoManager
 {
   -composition : BodyComposition
+  -sceneSwitcher : SceneSwitcher
   -pictureTaker : PictureTaker
   __
   +ApplyConfiguration(configuration : Dictionary<Options, int>) : void
@@ -57,7 +58,8 @@ SetupManager *-- RecentSaveDisplay
 CreatorManager o-- BodyComposition
 CreatorManager *-- IOptionInterface
 CreatorManager -l-> Options
-PhotoManager *--- PictureTaker
+PhotoManager *-- SceneSwitcher
+PhotoManager *-- PictureTaker
 
 class RecentSaveDisplay
 {
@@ -162,6 +164,15 @@ class ActiveBodyPart extends IActiveElement
 BodyComposition o-- IActiveElement
 ActiveBodyPart *-- OptionQueue
 ActiveBodyPart --> SwapCallbackResponse
+
+class SceneSwitcher
+{
+  -clips : AnimationClip[]
+  -currentIndex : int
+  __
+  +NextScene() : void
+  +PreviousScene() : void
+}
 
 class PictureTaker
 {

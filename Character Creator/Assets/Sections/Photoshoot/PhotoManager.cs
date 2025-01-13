@@ -9,14 +9,17 @@ public class PhotoManager : MonoBehaviour
     [SerializeField] private UnityEvent m_onBackRequested;
 
     private BodyComposition m_composition   = null;
+    private SceneSwitcher m_sceneSwitcher   = null;
     private PictureTaker m_pictureTaker     = null;
 
     public void Setup()
     {
         m_composition   = GetComponentInChildren<BodyComposition>(true);
+        m_sceneSwitcher = GetComponentInChildren<SceneSwitcher>(true);
         m_pictureTaker  = GetComponentInChildren<PictureTaker>(true);
 
         m_composition.Setup();
+        m_sceneSwitcher.Setup();
     }
 
     public void ApplyConfiguration(Dictionary<Options, int> _configuration)
