@@ -16,6 +16,11 @@ public class SceneSwitcher : MonoBehaviour
         m_textMesh.text = m_clips[0].name;
     }
 
+    public void Begin()
+    {
+        m_animator.Play(m_clips[0].name);
+    }
+
     public void NextScene()
     {
         m_currentIndex++;
@@ -38,9 +43,13 @@ public class SceneSwitcher : MonoBehaviour
         m_textMesh.text = clipName;
     }
 
-    private void OnDisable()
+    public void ResetScene()
     {
         m_currentIndex  = 0;
         m_textMesh.text = m_clips[0].name;
+
+        m_animator.Play("Empty");
+        m_animator.Update(0f);
+        m_animator.Update(0f);
     }
 }

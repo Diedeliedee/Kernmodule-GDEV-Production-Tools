@@ -25,10 +25,12 @@ public class PhotoManager : MonoBehaviour
     public void ApplyConfiguration(Dictionary<Options, int> _configuration)
     {
         m_composition.ApplyConfiguration(_configuration);
+        m_sceneSwitcher.Begin();
     }
 
     public void RequestGoBack()
     {
+        m_sceneSwitcher.ResetScene();
         m_onBackRequested.Invoke();
     }
 
