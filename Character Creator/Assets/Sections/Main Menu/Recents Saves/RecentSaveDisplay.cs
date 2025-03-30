@@ -20,6 +20,9 @@ public class RecentSaveDisplay : MonoBehaviour
         //  Load all registered saves.
         var saves = RecentSaveTracker.GetRegisteredSaves();
 
+        //  If the player has not saved previously, do nothing.
+        if (saves == null) return;
+
         foreach (var save in saves)
         {
             var spawnedDisplay = Instantiate(m_prefab, transform, false).GetComponent<RecentSaveButton>();
