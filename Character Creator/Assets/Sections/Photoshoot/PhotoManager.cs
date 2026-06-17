@@ -25,16 +25,7 @@ public class PhotoManager : MonoBehaviour
 
     public void ApplyMemory(OverheadMemory _memory)
     {
-        //  Always import external body parts first.
-        foreach (var part in _memory.externalBodyParts)
-        {
-            if (m_composition.ContainsBodyPart(part.info)) continue;
-            m_composition.AddBodypartToQueue(part.info);
-        }
-
-        //  Then configure the right indices.
-        m_composition.ApplyConfiguration(_memory.activeConfiguration);
-
+        m_composition.ApplyMemory(_memory);
         m_sceneSwitcher.Begin();
     }
 

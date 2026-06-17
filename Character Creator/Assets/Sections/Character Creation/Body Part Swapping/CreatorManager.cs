@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,14 +32,32 @@ namespace BodyPartSwap
             m_options.SubsribeToBroadcast(m_composition.ProcessIncomingSwap);
         }
 
-        public void ApplySaveFile(CharacterSetupMemory _save)
+        public async void ApplySaveFile(CharacterSetupMemory _save)
         {
             //  Create a blank save if one is not found.
             _save ??= new();
 
-            //  Apply.
+            //  Create a short term memory.
+            var shortTermMemory = new OverheadMemory();
 
-            m_composition.ApplyConfiguration(_save.savedIndices);
+            //  If external models are present in the save file.
+            if (_save.externalModels != null && _save.externalModels.Count > 0)
+            {
+                //  Convert registered external models into overhead memory.
+                var registeredModels = await m_externalPartHandler.LookupRegisteredModels(_save.externalModels);
+
+                //  Register them in short-term memory.
+                shortTermMemory.externalModels.AddRange(registeredModels);
+            }
+
+            //  Set-up the selection indices.
+            shortTermMemory.activeConfiguration = _save.savedIndices;
+
+            //  Save short-term memory on the blackboard.
+            Blackboard.instance.memory = shortTermMemory;
+
+            //  Apply short-term memory.
+            m_composition.ApplyMemory(shortTermMemory);
             m_options.ApplyCompilation(m_composition.compilation);
         }
 
@@ -51,9 +70,9 @@ namespace BodyPartSwap
             newSave.savedIndices = m_composition.ExtractConfiguration();
 
             //  Save the registered external body parts.
-            foreach (var cachedBodyPart in Blackboard.instance.memory.externalBodyParts)
+            foreach (var model in Blackboard.instance.memory.externalModels)
             {
-                newSave.externalBodyParts.Add(cachedBodyPart.registration);
+                newSave.externalModels.Add(model.ConvertToRegistration());
             }
 
             //  Load a path via the file browser.
@@ -84,15 +103,15 @@ namespace BodyPartSwap
             var path = ExplorerWrapper.GetLoadLocation("Import Custom Model", ExplorerWrapper.gltfFilter);
 
             //  Generate the body parts.
-            var bodyParts = await m_externalPartHandler.GenerateBodyParts(path);
+            var model = await m_externalPartHandler.GenerateExternalModel(path);
 
             //  Add the body parts to the blackboard.
-            Blackboard.instance.memory.externalBodyParts.AddRange(bodyParts);
+            Blackboard.instance.memory.externalModels.Add(model);
 
             //  Add all the generated bodyparts to the queue.
-            foreach (var part in bodyParts)
+            foreach (var part in model.bodyParts)
             {
-                m_composition.AddBodypartToQueue(part.info);
+                m_composition.AddBodypartToQueue(part);
             }
         }
 

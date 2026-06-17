@@ -27,7 +27,7 @@ public class BodyComposition : MonoBehaviour
         }
     }
 
-    public void ApplyConfiguration(Dictionary<Options, int> _configuration)
+    public void ApplyMemory(OverheadMemory _memory)
     {
         if (m_partCompilation.Count <= 0)
         {
@@ -35,17 +35,27 @@ public class BodyComposition : MonoBehaviour
             return;
         }
 
+        //  Always import the registered external body parts first.
+        foreach (var model in _memory.externalModels)
+        {
+            foreach (var bodyPart in model.bodyParts)
+            {
+                if (ContainsBodyPart(bodyPart)) continue;
+                AddBodypartToQueue(bodyPart);
+            }
+        }
+
         //  Iterate, and initialize every part in the compilation.
         foreach (var pair in m_partCompilation)
         {
             //  If the save file does not have information about a specific part, set it to the default index.
-            if (!_configuration.ContainsKey(pair.Key))
+            if (!_memory.activeConfiguration.ContainsKey(pair.Key))
             {
-                _configuration.Add(pair.Key, 0);
+                _memory.activeConfiguration.Add(pair.Key, 0);
             }
 
             //  Update every active part's index with that of the save file's corresponding option.
-            pair.Value.ApplyIndex(_configuration[pair.Key]);
+            pair.Value.ApplyIndex(_memory.activeConfiguration[pair.Key]);
         }
     }
 

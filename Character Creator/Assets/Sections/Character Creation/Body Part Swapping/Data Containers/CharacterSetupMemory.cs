@@ -11,7 +11,7 @@ public class CharacterSetupMemory
     /// <summary>
     /// A collection of externally registered body parts, that have been imported into the previous save.
     /// </summary>
-    public List<RegisteredExternalBodyPart> externalBodyParts = new();
+    public List<ExternalModelRegistration> externalModels = new();
 
     //  Example
     /*
