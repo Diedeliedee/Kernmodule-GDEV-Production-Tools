@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BodyPartSwap
@@ -7,10 +8,11 @@ namespace BodyPartSwap
     public class OptionQueue : ScriptableObject
     {
         [SerializeField] private Options m_type;
-        [SerializeField] private PartInfo[] m_parts;
+        [Space]
+        [SerializeField] private List<PartInfo> m_parts;
 
         public Options type     => m_type;
-        public int queueLength  => m_parts.Length;
+        public int queueLength  => m_parts.Count;
 
         public PartInfo GetFromQueue(int _index)
         {
@@ -20,13 +22,35 @@ namespace BodyPartSwap
                 return null;
             }
 
-            if (_index >= m_parts.Length)
+            if (_index >= m_parts.Count)
             {
                 Debug.LogWarning($"Requested index: {_index} exceed queue amout. Returning last instead.", this);
                 return m_parts[^1];
             }
 
             return m_parts[_index];
+        }
+
+        public void AddToQueue(PartInfo _part)
+        {
+            if (_part == null || _part.mesh == null)
+            {
+                Debug.LogError($"It appears the {_part.type} model you want to add to the {m_type} queue is null or corrupt. Please try again!", this);
+                return;
+            }
+
+            m_parts.Add(_part);
+        }
+
+        public void RemoveFromQueue(PartInfo _part)
+        {
+            if (_part == null || _part.mesh == null)
+            {
+                Debug.LogError($"It appears the {_part.type} model you want to remove from the {m_type} queue is null or corrupt. Please try again!", this);
+                return;
+            }
+
+            m_parts.Remove(_part);
         }
     }
 }

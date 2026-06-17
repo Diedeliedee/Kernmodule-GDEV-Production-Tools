@@ -11,8 +11,12 @@ namespace BodyPartSwap
         public string typeName      { get; }
         public string selectedName  { get; }
 
+        public void Setup();
+
         public SwapCallbackResponse ProcessSwap(int _offset);
 
         public SwapCallbackResponse ApplyIndex(int _index);
+
+        public void AddToQueue(PartInfo _bodyPart);
     }
 }

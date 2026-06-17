@@ -9,8 +9,9 @@ namespace BodyPartSwap
         [SerializeField] private UnityEvent m_onBackRequested;
         [SerializeField] private UnityEvent m_onPhotoModeRequested;
 
-        private BodyComposition m_composition   = null;
-        private OptionFrontman m_options        = null;
+        private BodyComposition m_composition               = null;
+        private OptionFrontman m_options                    = null;
+        private RuntimeBodyPartGenerator m_partGenerator    = null;
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
@@ -20,6 +21,7 @@ namespace BodyPartSwap
             //  Find all components.
             m_composition   = GetComponentInChildren<BodyComposition>(true);
             m_options       = GetComponentInChildren<OptionFrontman>(true);
+            m_partGenerator = GetComponentInChildren<RuntimeBodyPartGenerator>(true);
 
             //  Setup the body composition.
             m_composition.Setup();
@@ -53,13 +55,6 @@ namespace BodyPartSwap
             //  Load a path via the file browser.
             var path = ExplorerWrapper.GetSaveLocation("Save Character File", "My Character", ExplorerWrapper.jsonFilter);
 
-            //  Error handling.
-            if (string.IsNullOrEmpty(path))
-            {
-                Debug.LogError("Something went wrong during file selection! Beware..", this);
-                return;
-            }
-
             //  Save the file to that path.
             if (FileBridge.SaveTo(newSave, path))
             {
@@ -77,6 +72,21 @@ namespace BodyPartSwap
         public void OnBackRequestReceived()
         {
             m_onBackRequested.Invoke();
+        }
+
+        public async void OnImportRequestReceived()
+        {
+            //  Load a path via the file browser.
+            var path = ExplorerWrapper.GetLoadLocation("Import Custom Model", ExplorerWrapper.gltfFilter);
+
+            //  Generate the body parts.
+            var bodyParts = await m_partGenerator.GenerateBodyParts(path);
+
+            //  Add all the generated bodyparts to the queue.
+            foreach (var part in bodyParts)
+            {
+                m_composition.AddBodypartToQueue(part);
+            }
         }
 
         private void OnDestroy()

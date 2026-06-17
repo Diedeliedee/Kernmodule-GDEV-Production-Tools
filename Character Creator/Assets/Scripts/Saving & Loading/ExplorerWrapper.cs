@@ -5,6 +5,7 @@ public static class ExplorerWrapper
 {
     public static readonly ExtensionFilter jsonFilter   = new ExtensionFilter("Json Files", "json");
     public static readonly ExtensionFilter pngFilter    = new ExtensionFilter("Image Files", "png");
+    public static readonly ExtensionFilter gltfFilter    = new ExtensionFilter("Gltf Files", "glb");
 
     public static string GetSaveLocation(string _header, string _defaultName, params ExtensionFilter[] _extensions)
     {

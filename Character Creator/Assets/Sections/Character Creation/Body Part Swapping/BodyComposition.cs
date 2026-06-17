@@ -19,6 +19,12 @@ public class BodyComposition : MonoBehaviour
         m_partCompilation.Add(Options.Head, m_head);
         m_partCompilation.Add(Options.Torso, m_torso);
         m_partCompilation.Add(Options.Legs, m_legs);
+
+        //  Initialize all the thingymabobs.
+        foreach (var kvp in m_partCompilation)
+        {
+            kvp.Value.Setup();
+        }
     }
 
     public void ApplyConfiguration(Dictionary<Options, int> _configuration)
@@ -63,5 +69,10 @@ public class BodyComposition : MonoBehaviour
         }
 
         return m_partCompilation[_type].ProcessSwap(_offset);
+    }
+
+    public void AddBodypartToQueue(PartInfo _bodypart)
+    {
+        m_partCompilation[_bodypart.type].AddToQueue(_bodypart);
     }
 }

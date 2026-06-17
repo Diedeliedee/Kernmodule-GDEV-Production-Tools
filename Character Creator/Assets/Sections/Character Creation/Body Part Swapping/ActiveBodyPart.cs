@@ -18,6 +18,12 @@ namespace BodyPartSwap
         public string typeName      => type.ToString();
         public string selectedName  => m_selectedPartInfo ? m_selectedPartInfo.name : "Null :(";
 
+        public void Setup()
+        {
+            //  Duplicate the queue and assign it. So that any run-time changes aren't saved.
+            m_queue = Instantiate(m_queue);
+        }
+
         public SwapCallbackResponse ProcessSwap(int _offset)
         {
             int Modulo(int _a , int _b) => _a - _b * Mathf.FloorToInt((float)_a / (float)_b);
@@ -45,6 +51,11 @@ namespace BodyPartSwap
             };
 
             return callBack;
+        }
+
+        public void AddToQueue(PartInfo _bodyPart)
+        {
+            m_queue.AddToQueue(_bodyPart);
         }
     }
 }
