@@ -69,12 +69,12 @@ public class RuntimeBodyPartGenerator : MonoBehaviour
         {
             Debug.LogError($"Found absolutely NO suitable bodyparts in model of {_path}.. :(", this);
 
-            //importInstance.Dispose();
+            importInstance.Dispose();
             return null;
         }
 
         //  If there are, pull them back up and stuff.
-        //importInstance.Dispose();
+        importInstance.Dispose();
         return partInstances;
     }
 }
