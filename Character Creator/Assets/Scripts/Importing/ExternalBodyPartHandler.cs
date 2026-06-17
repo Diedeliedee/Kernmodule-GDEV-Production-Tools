@@ -2,18 +2,35 @@ using BodyPartSwap;
 using GLTFast;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExternalBodyPartHandler : MonoBehaviour
 {
+    [Header("Events:")]
+    [SerializeField] private UnityEvent<string, Color> m_onMessageLogRequired;
+
+    [Header("Properties:")]
+    [SerializeField] private Color m_logColor   = Color.white;
+    [SerializeField] private Color m_errorColor = Color.red;
+
+    [Header("Reference:")]
+    [SerializeField] private PartInfo m_backupHead;
+    [SerializeField] private PartInfo m_backupTorso;
+    [SerializeField] private PartInfo m_backupLegs;
+
     public async Task<List<CachedExternalModel>> LookupRegisteredModels(List<ExternalModelRegistration> _registrations)
     {
         var externalModels = new List<CachedExternalModel>();
 
         foreach (var registration in _registrations)
         {
-            externalModels.Add(await LookupRegisteredModel(registration));
+            var model = await LookupRegisteredModel(registration);
+
+            if (model == null) continue;
+            externalModels.Add(model);
         }
         return externalModels;
     }
@@ -24,7 +41,7 @@ public class ExternalBodyPartHandler : MonoBehaviour
         if (!await InstantiateFromGltf(_registration.path))
         {
             Cleanup();
-            return null;
+            return GetBackupCachedModel(_registration.path);
         }
 
         //  Scan all mesh renderers and see which corresponds with which mesh in the registry.
@@ -32,11 +49,16 @@ public class ExternalBodyPartHandler : MonoBehaviour
         if (partInstances == null || partInstances.Count <= 0)
         {
             Cleanup();
-            return null;
+            return GetBackupCachedModel(_registration.path);
         }
 
         //  If all is well, pull the back up!
         Cleanup();
+
+        //  Log that all went well!
+        m_onMessageLogRequired.Invoke($"Succesfully re-imported your model at: {_registration.path}!", m_logColor);
+
+        //  Return that.
         return new CachedExternalModel
         {
             path        = _registration.path,
@@ -63,6 +85,11 @@ public class ExternalBodyPartHandler : MonoBehaviour
 
         //  If there are, pull them back up and stuff.
         Cleanup();
+
+        //  Log that stuff y'know.
+        m_onMessageLogRequired.Invoke($"Succesfully imported a model at: {_path}!", m_logColor);
+
+        //  Send it up!!
         return new CachedExternalModel
         {
             path        = _path,
@@ -76,25 +103,45 @@ public class ExternalBodyPartHandler : MonoBehaviour
     private async Task<bool> InstantiateFromGltf(string _path)
     {
         var importInstance  = new GltfImport();
-        var uri             = new Uri(_path);
+        Uri uri             = null;
 
+        //  Log. :)
         Debug.Log($"Attempting to import Gltf file at: {_path}", this);
 
-        //  Try to load the Gltf file.
-        if (!await importInstance.LoadFile(_path, uri))
+        //  Try to make a Uri. (Yes that can break the program too.
+        try
         {
-            Debug.LogError($"Error while trying to import custom model {_path}", this);
+            uri = new Uri(_path);
+        }
+        catch
+        {
+            m_onMessageLogRequired.Invoke($"The file path:\n{_path} does not seem to be valid somehow. I don't know how you managed to cause this.", m_errorColor);
+            return false;
+        }
+
+        try
+        {
+            //  Try to load the Gltf file.
+            if (!await importInstance.LoadFile(_path, uri))
+            {
+                m_onMessageLogRequired.Invoke($"Something went wrong while trying to import your custom model at:\n{_path}", m_errorColor);
+                return false;
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            m_onMessageLogRequired.Invoke($"We couldn't find your model at:\n{_path}.\nIt probably got moved somewhere else!", m_errorColor);
             return false;
         }
 
         //  Instantiate the Gltf file.
         if (!await importInstance.InstantiateMainSceneAsync(transform))
         {
-            Debug.LogError($"Somethin went wrong while trying to instantiate custom model {_path}", this);
+            m_onMessageLogRequired.Invoke($"Something went wrong while trying to import your custom model at:\n{_path}", m_errorColor);
             return false;
         }
 
-        Debug.Log($"Instantiation of file at: {_path} supposedly succeeded!", this);
+        //  If everything went well, yippeee!
         return true;
     }
 
@@ -157,7 +204,7 @@ public class ExternalBodyPartHandler : MonoBehaviour
         //  If no suitable bodypart were found, log it.
         if (instances.Count <= 0)
         {
-            Debug.LogError($"Found absolutely NO suitable bodyparts in {_renderers}.. :(", this);
+            m_onMessageLogRequired.Invoke($"The imported file does not seems to be a compatible body part..", m_errorColor);
             return null;
         }
 
@@ -216,6 +263,22 @@ public class ExternalBodyPartHandler : MonoBehaviour
         /// While I did try to preserve that by copying the data, I might as well destroy just the gameobject instead.
         //importInstance.Dispose();
 
+        if (transform.childCount <= 0) return;
         Destroy(transform.GetChild(0).gameObject);
+    }
+
+    /// <returns>A dummy model in case something goes wrong. :)</returns>
+    private CachedExternalModel GetBackupCachedModel(string _path)
+    {
+        return new()
+        {
+            path        = _path,
+            bodyParts   = new()
+                {
+                    m_backupHead,
+                    m_backupTorso,
+                    m_backupLegs,
+                }
+        };
     }
 }

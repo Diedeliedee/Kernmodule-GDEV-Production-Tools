@@ -35,6 +35,7 @@ RectTransform:
   - {fileID: 112213746237527969}
   - {fileID: 1329586047281478669}
   - {fileID: 5653522504716563781}
+  - {fileID: 6054692260100417465}
   m_Father: {fileID: 5944394028804106051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -291,6 +292,84 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &725302700426896840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6054692260100417465}
+  - component: {fileID: 1688419877496199309}
+  - component: {fileID: 530469587782325121}
+  m_Layer: 5
+  m_Name: Log Zone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6054692260100417465
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725302700426896840}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1372867668283875971}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 20.000011}
+  m_SizeDelta: {x: 960, y: -199.99997}
+  m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &1688419877496199309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725302700426896840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e92d987d3605414fb0b4108303aa175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_logKillTime: 5
+  m_logObject: {fileID: 1855026788294506128, guid: 211c9a4e6d447b54d96ccb5b9fc6d94f,
+    type: 3}
+--- !u!114 &530469587782325121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725302700426896840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 8
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &863881017088879206
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,6 +852,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 058dbd2812aafcf4a9afc92944837567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_onMessageLogRequired:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1688419877496199309}
+        m_TargetAssemblyTypeName: LogHandler, Assembly-CSharp
+        m_MethodName: OnLogCallReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_logColor: {r: 1, g: 1, b: 1, a: 1}
+  m_errorColor: {r: 1, g: 0.7490196, b: 0.7490196, a: 1}
+  m_backupHead: {fileID: 11400000, guid: d6ff3232e84d9044ab289ca4cbab7492, type: 2}
+  m_backupTorso: {fileID: 11400000, guid: b7543ee5dfde4d245b72a5067800743b, type: 2}
+  m_backupLegs: {fileID: 11400000, guid: bdcc3e864b904ee49b08da009c3c917b, type: 2}
 --- !u!1 &1778400077459807607
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,7 +2074,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 742703125916623127}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.999901
+  m_Size: 0.99953496
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2700,7 +2799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0009985652}
+  m_AnchoredPosition: {x: 0, y: 0.00006167322}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7569886414186084211

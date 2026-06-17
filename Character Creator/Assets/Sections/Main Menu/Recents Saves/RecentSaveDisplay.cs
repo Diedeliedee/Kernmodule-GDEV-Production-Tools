@@ -7,7 +7,7 @@ public class RecentSaveDisplay : MonoBehaviour
 {
     [Header("Reference:")]
     [SerializeField] private GameObject m_prefab;
-    [SerializeField] private WarningText m_warningText;
+    [SerializeField] private TextPopUp m_warningText;
 
     [Header("Events:")]
     [SerializeField] private UnityEvent<CharacterSetupMemory> m_onSaveSelected;

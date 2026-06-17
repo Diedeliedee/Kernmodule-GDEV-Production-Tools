@@ -10,6 +10,7 @@ namespace BodyPartSwap
         [SerializeField] private UnityEvent m_onBackRequested;
         [SerializeField] private UnityEvent m_onPhotoModeRequested;
 
+
         private BodyComposition m_composition                   = null;
         private OptionFrontman m_options                        = null;
         private ExternalBodyPartHandler m_externalPartHandler   = null;
@@ -46,8 +47,12 @@ namespace BodyPartSwap
                 //  Convert registered external models into overhead memory.
                 var registeredModels = await m_externalPartHandler.LookupRegisteredModels(_save.externalModels);
 
-                //  Register them in short-term memory.
-                shortTermMemory.externalModels.AddRange(registeredModels);
+                //  If all is well..
+                if (registeredModels != null && registeredModels.Count > 0)
+                {
+                    //  Register them in short-term memory.
+                    shortTermMemory.externalModels.AddRange(registeredModels);
+                }
             }
 
             //  Set-up the selection indices.
@@ -104,6 +109,9 @@ namespace BodyPartSwap
 
             //  Generate the body parts.
             var model = await m_externalPartHandler.GenerateExternalModel(path);
+
+            //  Obviously if the import has not yielded any results. Don't do anything.
+            if (model == null) return;
 
             //  Add the body parts to the blackboard.
             Blackboard.instance.memory.externalModels.Add(model);

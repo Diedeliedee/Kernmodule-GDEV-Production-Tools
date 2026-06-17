@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class WarningText : MonoBehaviour
+public class TextPopUp : MonoBehaviour
 {
     private Animator m_animator         = null;
     private TextMeshProUGUI m_textMesh  = null;
@@ -16,5 +16,10 @@ public class WarningText : MonoBehaviour
     {
         m_textMesh.text = _message;
         m_animator.Play("Display", -1);
+    }
+
+    public void SetColor(Color _color)
+    {
+        m_textMesh.color = _color;
     }
 }
