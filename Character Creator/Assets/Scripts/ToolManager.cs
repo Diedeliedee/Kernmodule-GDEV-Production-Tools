@@ -47,7 +47,7 @@ public class ToolManager : MonoBehaviour
 
         m_photo.gameObject.SetActive(true);
 
-        m_photo.ApplyConfiguration(Blackboard.instance.activeConfiguration);
+        m_photo.ApplyMemory(Blackboard.instance.memory);
     }
 
     public void RequestReloadTool()

@@ -10,12 +10,12 @@ using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class RuntimeBodyPartGenerator : MonoBehaviour
+public class ExternalBodyPartHandler : MonoBehaviour
 {
-    public async Task<List<PartInfo>> GenerateBodyParts(string _path)
+    public async Task<List<CachedExternalBodyPart>> GenerateBodyParts(string _path)
     {
         var importInstance  = new GltfImport();
-        var uri             = new System.Uri(_path);
+        var uri             = new Uri(_path);
 
         Debug.Log(_path);
 
@@ -35,7 +35,7 @@ public class RuntimeBodyPartGenerator : MonoBehaviour
 
         //  Scan all mesh renderers. Compare them with the specific types.
         var instantiatedRenderers   = GetComponentsInChildren<SkinnedMeshRenderer>();
-        var partInstances           = new List<PartInfo>();
+        var partInstances           = new List<CachedExternalBodyPart>();
 
         //  Iterate through all the meshes.
         foreach (var mesh in instantiatedRenderers)
@@ -47,9 +47,23 @@ public class RuntimeBodyPartGenerator : MonoBehaviour
                 continue;
             }
 
-            //  Add the generated partinfo to the list.
+            //  Generate the body part, cache it, and add it to the list.
+            var generatedBodyPart = CreatePartInfo(_type, mesh);
+            var cachedBodyPart = new CachedExternalBodyPart()
+            {
+                info            = generatedBodyPart,
+                registration    = new RegisteredExternalBodyPart
+                {
+                    path    = _path,
+                    uri     = uri,
+                    type    = _type,
+                }
+            };
+
+            partInstances.Add(cachedBodyPart);
+
+            //  C
             Debug.Log($"Succesfully detected model part {mesh.gameObject.name} is a {_type.ToString()}.", this);
-            partInstances.Add(CreatePartInfo(_type, mesh));
         }
 
         //  If no suitable bodypart were found, log it.

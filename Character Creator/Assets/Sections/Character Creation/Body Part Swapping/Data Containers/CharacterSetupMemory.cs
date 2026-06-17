@@ -8,6 +8,11 @@ public class CharacterSetupMemory
     /// </summary>
     public Dictionary<Options, int> savedIndices = new();
 
+    /// <summary>
+    /// A collection of externally registered body parts, that have been imported into the previous save.
+    /// </summary>
+    public List<RegisteredExternalBodyPart> externalBodyParts = new();
+
     //  Example
     /*
     public Dictionary<int, int> savedIndices = new()

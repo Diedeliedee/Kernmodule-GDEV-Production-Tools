@@ -53,6 +53,11 @@ namespace BodyPartSwap
             return callBack;
         }
 
+        public bool ContainsBodyPart(PartInfo _bodyPart)
+        {
+            return m_queue.Contains(_bodyPart);
+        }
+
         public void AddToQueue(PartInfo _bodyPart)
         {
             m_queue.AddToQueue(_bodyPart);

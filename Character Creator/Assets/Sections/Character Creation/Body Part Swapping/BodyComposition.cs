@@ -71,6 +71,11 @@ public class BodyComposition : MonoBehaviour
         return m_partCompilation[_type].ProcessSwap(_offset);
     }
 
+    public bool ContainsBodyPart(PartInfo _bodypart)
+    {
+        return m_partCompilation[_bodypart.type].ContainsBodyPart(_bodypart);
+    }
+
     public void AddBodypartToQueue(PartInfo _bodypart)
     {
         m_partCompilation[_bodypart.type].AddToQueue(_bodypart);

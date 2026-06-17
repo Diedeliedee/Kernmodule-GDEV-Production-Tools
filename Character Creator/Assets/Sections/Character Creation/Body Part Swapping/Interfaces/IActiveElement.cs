@@ -17,6 +17,8 @@ namespace BodyPartSwap
 
         public SwapCallbackResponse ApplyIndex(int _index);
 
+        public bool ContainsBodyPart(PartInfo _bodypart);
+
         public void AddToQueue(PartInfo _bodyPart);
     }
 }

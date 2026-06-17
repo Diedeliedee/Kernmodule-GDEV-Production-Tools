@@ -9,9 +9,9 @@ namespace BodyPartSwap
         [SerializeField] private UnityEvent m_onBackRequested;
         [SerializeField] private UnityEvent m_onPhotoModeRequested;
 
-        private BodyComposition m_composition               = null;
-        private OptionFrontman m_options                    = null;
-        private RuntimeBodyPartGenerator m_partGenerator    = null;
+        private BodyComposition m_composition                   = null;
+        private OptionFrontman m_options                        = null;
+        private ExternalBodyPartHandler m_externalPartHandler   = null;
 
         /// <summary>
         /// Called when the tool enters the creator scene for the first time.
@@ -19,9 +19,9 @@ namespace BodyPartSwap
         public void Setup()
         {
             //  Find all components.
-            m_composition   = GetComponentInChildren<BodyComposition>(true);
-            m_options       = GetComponentInChildren<OptionFrontman>(true);
-            m_partGenerator = GetComponentInChildren<RuntimeBodyPartGenerator>(true);
+            m_composition           = GetComponentInChildren<BodyComposition>(true);
+            m_options               = GetComponentInChildren<OptionFrontman>(true);
+            m_externalPartHandler   = GetComponentInChildren<ExternalBodyPartHandler>(true);
 
             //  Setup the body composition.
             m_composition.Setup();
@@ -37,6 +37,7 @@ namespace BodyPartSwap
             _save ??= new();
 
             //  Apply.
+
             m_composition.ApplyConfiguration(_save.savedIndices);
             m_options.ApplyCompilation(m_composition.compilation);
         }
@@ -47,9 +48,12 @@ namespace BodyPartSwap
             var newSave = new CharacterSetupMemory();
 
             //  Configure the save with the current part compilation's indices.
-            foreach (var pair in m_composition.compilation)
+            newSave.savedIndices = m_composition.ExtractConfiguration();
+
+            //  Save the registered external body parts.
+            foreach (var cachedBodyPart in Blackboard.instance.memory.externalBodyParts)
             {
-                newSave.savedIndices.Add(pair.Key, pair.Value.index);
+                newSave.externalBodyParts.Add(cachedBodyPart.registration);
             }
 
             //  Load a path via the file browser.
@@ -64,7 +68,7 @@ namespace BodyPartSwap
 
         public void OnExportRequestReceived()
         {
-            Blackboard.instance.activeConfiguration = m_composition.ExtractConfiguration();
+            Blackboard.instance.memory.activeConfiguration = m_composition.ExtractConfiguration();
 
             m_onPhotoModeRequested.Invoke();
         }
@@ -80,12 +84,15 @@ namespace BodyPartSwap
             var path = ExplorerWrapper.GetLoadLocation("Import Custom Model", ExplorerWrapper.gltfFilter);
 
             //  Generate the body parts.
-            var bodyParts = await m_partGenerator.GenerateBodyParts(path);
+            var bodyParts = await m_externalPartHandler.GenerateBodyParts(path);
+
+            //  Add the body parts to the blackboard.
+            Blackboard.instance.memory.externalBodyParts.AddRange(bodyParts);
 
             //  Add all the generated bodyparts to the queue.
             foreach (var part in bodyParts)
             {
-                m_composition.AddBodypartToQueue(part);
+                m_composition.AddBodypartToQueue(part.info);
             }
         }
 

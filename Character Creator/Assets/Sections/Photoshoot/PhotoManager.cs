@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BodyPartSwap;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,9 +23,18 @@ public class PhotoManager : MonoBehaviour
         m_sceneSwitcher.Setup();
     }
 
-    public void ApplyConfiguration(Dictionary<Options, int> _configuration)
+    public void ApplyMemory(OverheadMemory _memory)
     {
-        m_composition.ApplyConfiguration(_configuration);
+        //  Always import external body parts first.
+        foreach (var part in _memory.externalBodyParts)
+        {
+            if (m_composition.ContainsBodyPart(part.info)) continue;
+            m_composition.AddBodypartToQueue(part.info);
+        }
+
+        //  Then configure the right indices.
+        m_composition.ApplyConfiguration(_memory.activeConfiguration);
+
         m_sceneSwitcher.Begin();
     }
 

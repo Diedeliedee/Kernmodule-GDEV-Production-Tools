@@ -31,6 +31,11 @@ namespace BodyPartSwap
             return m_parts[_index];
         }
 
+        public bool Contains(PartInfo _part)
+        {
+            return m_parts.Contains(_part);
+        }
+
         public void AddToQueue(PartInfo _part)
         {
             if (_part == null || _part.mesh == null)
