@@ -115,6 +115,12 @@ public class ExternalBodyPartHandler : MonoBehaviour
         }
         catch
         {
+            if (string.IsNullOrEmpty(_path))
+            {
+                m_onMessageLogRequired.Invoke($"File path seems to be empty! Could be because you closed your file explorer.", m_logColor);
+                return false;
+            }
+
             m_onMessageLogRequired.Invoke($"The file path:\n{_path} does not seem to be valid somehow. I don't know how you managed to cause this.", m_errorColor);
             return false;
         }
