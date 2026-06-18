@@ -6,7 +6,7 @@ public class CharacterSetupMemory
     /// <summary>
     /// A dictionary of queue indices, attached to their corresponding part enum value.
     /// </summary>
-    public Dictionary<Options, int> savedIndices = new();
+    public Dictionary<Options, BodyPartConfiguration> savedConfiguration = new();
 
     /// <summary>
     /// A collection of externally registered body parts, that have been imported into the previous save.

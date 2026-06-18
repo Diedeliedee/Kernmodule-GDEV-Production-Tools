@@ -3,6 +3,6 @@ using BodyPartSwap;
 
 public class OverheadMemory
 {
-    public Dictionary<Options, int> activeConfiguration = null;
-    public List<CachedExternalModel> externalModels     = new();
+    public Dictionary<Options, BodyPartConfiguration> activeConfiguration   = null;
+    public List<CachedExternalModel> externalModels                         = new();
 }

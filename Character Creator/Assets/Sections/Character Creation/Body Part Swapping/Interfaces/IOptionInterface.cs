@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace BodyPartSwap
@@ -8,10 +9,10 @@ namespace BodyPartSwap
 
         public void ApplyCompilation(Dictionary<Options, IActiveElement> _compilation);
 
-        public void SubsribeToBroadcast(SwapRequest _request);
+        public void Subscribe(SwapRequest _swapRequest, Action<Options, int, float> _scaleRequest);
 
-        public void UnsubscribeFromBroadcast(SwapRequest _request);
+        public void Unsubscribe(SwapRequest _swapRequest, Action<Options, int, float> _scaleRequest);
 
-        public delegate SwapCallbackResponse SwapRequest(Options _type, int _offset);
+        public delegate SwapCallback SwapRequest(Options _type, int _offset);
     }
 }

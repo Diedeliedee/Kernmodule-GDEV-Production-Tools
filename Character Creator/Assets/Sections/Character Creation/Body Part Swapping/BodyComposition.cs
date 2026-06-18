@@ -48,29 +48,44 @@ public class BodyComposition : MonoBehaviour
         //  Iterate, and initialize every part in the compilation.
         foreach (var pair in m_partCompilation)
         {
-            //  If the save file does not have information about a specific part, set it to the default index.
+            //  If the save file does not have information about a specific part, set it to the default configuration.
             if (!_memory.activeConfiguration.ContainsKey(pair.Key))
             {
-                _memory.activeConfiguration.Add(pair.Key, 0);
+                var defaultConfiguration = new BodyPartConfiguration()
+                {
+                    index = 0,
+                    scale = Vector3.one,
+                };
+
+                _memory.activeConfiguration.Add(pair.Key, defaultConfiguration);
             }
 
             //  Update every active part's index with that of the save file's corresponding option.
-            pair.Value.ApplyIndex(_memory.activeConfiguration[pair.Key]);
+            pair.Value.ApplyIndex(_memory.activeConfiguration[pair.Key].index);
+
+            //  Update the scale of every active part with that of the save file.
+            pair.Value.ProcessScale(_memory.activeConfiguration[pair.Key].scale);
         }
     }
 
-    public Dictionary<Options, int> ExtractConfiguration()
+    public Dictionary<Options, BodyPartConfiguration> ExtractConfiguration()
     {
-        var configuration = new Dictionary<Options, int>();
+        var configurations = new Dictionary<Options, BodyPartConfiguration>();
 
         foreach (var pair in m_partCompilation)
         {
-            configuration.Add(pair.Key, pair.Value.index);
+            var configuration = new BodyPartConfiguration
+            {
+                index = pair.Value.index,
+                scale = pair.Value.scale,
+            };
+
+            configurations.Add(pair.Key, configuration);
         }
-        return configuration;
+        return configurations;
     }
 
-    public SwapCallbackResponse ProcessIncomingSwap(Options _type, int _offset)
+    public SwapCallback ProcessIncomingSwap(Options _type, int _offset)
     {
         if (!m_partCompilation.ContainsKey(_type))
         {
@@ -79,6 +94,17 @@ public class BodyComposition : MonoBehaviour
         }
 
         return m_partCompilation[_type].ProcessSwap(_offset);
+    }
+
+    public void ProcessScale(Options _type, int _axis, float _scale)
+    {
+        if (!m_partCompilation.ContainsKey(_type))
+        {
+            Debug.LogError($"Warning! The scale-able element of type {_type} is not found in the manager's dictionary!", this);
+            return;
+        }
+
+        m_partCompilation[_type].ProcessScale(_axis, _scale);
     }
 
     public bool ContainsBodyPart(PartInfo _bodypart)

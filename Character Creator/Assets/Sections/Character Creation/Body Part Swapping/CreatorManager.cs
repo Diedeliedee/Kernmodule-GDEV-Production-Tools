@@ -30,7 +30,7 @@ namespace BodyPartSwap
 
             //  Setup the options frontman.
             m_options.Setup(m_composition.compilation);
-            m_options.SubsribeToBroadcast(m_composition.ProcessIncomingSwap);
+            m_options.Subscribe(m_composition.ProcessIncomingSwap, m_composition.ProcessScale);
         }
 
         public async void ApplySaveFile(CharacterSetupMemory _save)
@@ -56,7 +56,7 @@ namespace BodyPartSwap
             }
 
             //  Set-up the selection indices.
-            shortTermMemory.activeConfiguration = _save.savedIndices;
+            shortTermMemory.activeConfiguration = _save.savedConfiguration;
 
             //  Save short-term memory on the blackboard.
             Blackboard.instance.memory = shortTermMemory;
@@ -72,7 +72,7 @@ namespace BodyPartSwap
             var newSave = new CharacterSetupMemory();
 
             //  Configure the save with the current part compilation's indices.
-            newSave.savedIndices = m_composition.ExtractConfiguration();
+            newSave.savedConfiguration = m_composition.ExtractConfiguration();
 
             //  Save the registered external body parts.
             foreach (var model in Blackboard.instance.memory.externalModels)
@@ -125,7 +125,7 @@ namespace BodyPartSwap
 
         private void OnDestroy()
         {
-            m_options.UnsubscribeFromBroadcast(m_composition.ProcessIncomingSwap);
+            m_options.Unsubscribe(m_composition.ProcessIncomingSwap, m_composition.ProcessScale);
         }
     }
 }

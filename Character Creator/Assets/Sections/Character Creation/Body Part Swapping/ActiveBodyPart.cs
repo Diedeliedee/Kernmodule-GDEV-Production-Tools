@@ -12,8 +12,9 @@ namespace BodyPartSwap
         private int m_index                 = 0;
         private PartInfo m_selectedPartInfo = null;
 
-        public Options type => m_queue.type;
-        public int index    => m_index;
+        public Options type     => m_queue.type;
+        public int index        => m_index;
+        public Vector3 scale    => transform.localScale;
 
         public string typeName      => type.ToString();
         public string selectedName  => m_selectedPartInfo ? m_selectedPartInfo.name : "Null :(";
@@ -24,7 +25,7 @@ namespace BodyPartSwap
             m_queue = Instantiate(m_queue);
         }
 
-        public SwapCallbackResponse ProcessSwap(int _offset)
+        public SwapCallback ProcessSwap(int _offset)
         {
             int Modulo(int _a , int _b) => _a - _b * Mathf.FloorToInt((float)_a / (float)_b);
 
@@ -33,7 +34,7 @@ namespace BodyPartSwap
             return ApplyIndex(trueIndex);
         }
 
-        public SwapCallbackResponse ApplyIndex(int _index)
+        public SwapCallback ApplyIndex(int _index)
         {
             var pulled = m_queue.GetFromQueue(_index);
 
@@ -43,14 +44,31 @@ namespace BodyPartSwap
             m_index             = _index;
             m_selectedPartInfo  = pulled;
 
-            var callBack = new SwapCallbackResponse
+            return new()
             {
                 part    = pulled,
                 name    = pulled.name,
-                result  = SwapCallbackResponse.Result.Success,
+                result  = SwapCallback.Result.Success,
             };
+        }
 
-            return callBack;
+        public void ProcessScale(int _axis, float _scale)
+        {
+            var scale = transform.localScale;
+
+            switch (_axis)
+            {
+                case 0: scale.x = _scale; break;
+                case 1: scale.y = _scale;  break;
+                case 2: scale.z = _scale; break;
+            }
+
+            transform.localScale = scale;
+        }
+
+        public void ProcessScale(Vector3 _scale)
+        {
+            transform.localScale = _scale;
         }
 
         public bool ContainsBodyPart(PartInfo _bodyPart)
