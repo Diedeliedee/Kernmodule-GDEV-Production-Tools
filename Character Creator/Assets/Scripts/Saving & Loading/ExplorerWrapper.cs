@@ -10,7 +10,7 @@ public static class ExplorerWrapper
     public static string GetSaveLocation(string _header, string _defaultName, params ExtensionFilter[] _extensions)
     {
         //  Caching location.
-        var path = StandaloneFileBrowser.SaveFilePanel(_header, Application.persistentDataPath, _defaultName, _extensions);
+        var path = StandaloneFileBrowser.SaveFilePanel(_header, Application.dataPath, _defaultName, _extensions);
 
         //  Error handling.
         if (string.IsNullOrEmpty(path))
