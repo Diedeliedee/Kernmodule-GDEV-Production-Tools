@@ -21,6 +21,9 @@ public class ExternalBodyPartHandler : MonoBehaviour
     [SerializeField] private PartInfo m_backupTorso;
     [SerializeField] private PartInfo m_backupLegs;
 
+    //  Cache:
+    private List<GltfImport> m_instances = new();
+
     public async Task<List<CachedExternalModel>> LookupRegisteredModels(List<ExternalModelRegistration> _registrations)
     {
         var externalModels = new List<CachedExternalModel>();
@@ -118,10 +121,12 @@ public class ExternalBodyPartHandler : MonoBehaviour
             if (string.IsNullOrEmpty(_path))
             {
                 m_onMessageLogRequired.Invoke($"File path seems to be empty! Could be because you closed your file explorer.", m_logColor);
+                importInstance.Dispose();
                 return false;
             }
 
             m_onMessageLogRequired.Invoke($"The file path:\n{_path} does not seem to be valid somehow. I don't know how you managed to cause this.", m_errorColor);
+            importInstance.Dispose();
             return false;
         }
 
@@ -131,12 +136,14 @@ public class ExternalBodyPartHandler : MonoBehaviour
             if (!await importInstance.LoadFile(_path, uri))
             {
                 m_onMessageLogRequired.Invoke($"Something went wrong while trying to import your custom model at:\n{_path}", m_errorColor);
+            importInstance.Dispose();
                 return false;
             }
         }
         catch (FileNotFoundException e)
         {
             m_onMessageLogRequired.Invoke($"We couldn't find your model at:\n{_path}.\nIt probably got moved somewhere else!", m_errorColor);
+            importInstance.Dispose();
             return false;
         }
 
@@ -144,10 +151,12 @@ public class ExternalBodyPartHandler : MonoBehaviour
         if (!await importInstance.InstantiateMainSceneAsync(transform))
         {
             m_onMessageLogRequired.Invoke($"Something went wrong while trying to import your custom model at:\n{_path}", m_errorColor);
+            importInstance.Dispose();
             return false;
         }
 
         //  If everything went well, yippeee!
+        m_instances.Add(importInstance);
         return true;
     }
 
@@ -271,6 +280,12 @@ public class ExternalBodyPartHandler : MonoBehaviour
 
         if (transform.childCount <= 0) return;
         Destroy(transform.GetChild(0).gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var instance in m_instances) instance.Dispose();
+        m_instances.Clear();
     }
 
     /// <returns>A dummy model in case something goes wrong. :)</returns>
