@@ -15,7 +15,8 @@ public static class FileBridge
         var settings = new JsonSerializerSettings();
 
         //  Ignore reference loops. Certain properties in the Vector3 struct, like "normalized" will self-reference.
-        settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        settings.ReferenceLoopHandling  = ReferenceLoopHandling.Ignore;
+        settings.Formatting             = Formatting.Indented;
 
         try
         {
