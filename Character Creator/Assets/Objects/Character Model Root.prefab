@@ -213,6 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_queue: {fileID: 11400000, guid: 9e328b80c99ffe44980dc46e78bee2e7, type: 2}
   m_meshRenderer: {fileID: 7799675611745495810}
+  m_ChildBodyPart: {fileID: 0}
 --- !u!137 &857489115371530635 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -6547223059409353530, guid: 42248586c1b403240b3396de64a7c919,
@@ -245,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_queue: {fileID: 11400000, guid: 1fb368232c2539640a17255b690eb226, type: 2}
   m_meshRenderer: {fileID: 857489115371530635}
+  m_ChildBodyPart: {fileID: 6173612917056095780}
 --- !u!137 &6375862837689315281 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -666985854777507172, guid: 42248586c1b403240b3396de64a7c919,
@@ -271,6 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_queue: {fileID: 11400000, guid: 7196648eaeb13174cae7d266b5c81ded, type: 2}
   m_meshRenderer: {fileID: 6375862837689315281}
+  m_ChildBodyPart: {fileID: 7650717960632894655}
 --- !u!137 &7799675611745495810 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -4396642182433536433, guid: 42248586c1b403240b3396de64a7c919,
